@@ -1,0 +1,11 @@
+.background{
+    background-image: url(../week2/image/background1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.background1{
+    background-image: url(../week2/image/background\ image.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
