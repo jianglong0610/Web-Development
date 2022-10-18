@@ -7,26 +7,32 @@
 </head>
 
 <body>
+    <div class="d-flex flex-wrap">
     <?php
-
+    $plus= "+" ;
     $sum=0 ;
 
     for ($num = 1; $num <= 100; $num++) {
-
+        if($num == 100)
+        {
+            $plus = "";
+        }
         if($num % 2 ==0) 
     {
-        echo "<strong>" . "<p class=\"d-flex flex-column text-center\">$num</p>" . "</strong>";
+        echo "<strong>" . "<p class=\"d-flex\">$num $plus</p>" . "</strong>";
     }
         else
         {
-            echo "<p class=\"d-flex flex-column text-center\">$num</p>"; 
+            echo "<p class=\"d-flex\">$num $plus</p>"; 
         }
-        $sum=$sum+$num ;
+        
+        $sum=$sum+$num;
+        
     }
-        echo "<br>" . "<strong><p class=\"d-flex flex-column text-center\">$sum</p></strong>";
+        echo "<strong><p class=\"d-flex\"> = $sum</p></strong>";
     
     ?>
-
+</div>
 </body>
 
 
