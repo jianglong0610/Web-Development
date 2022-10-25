@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>homework 2</title>
+    <title>exercise 1</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,9 +21,17 @@
 <div class="col-3">
 <select class="form-select bg-info" aria-label="Default select example">
   <option selected>Day</option>
+
   <?php
-    for ($num = 1; $num <= 31; $num++) {
-        echo "<option value=\"$num\">$num</option>";
+  $day = date("d");
+    for ($num = $date ; $num <= 31; $num++) {
+        $date = "";
+        if($num == $day)
+        {
+            $date = "selected";
+        }
+
+        echo "<option value=\"$num\" $date>$num</option>";
       } 
        ?>
 </select>
@@ -33,11 +41,19 @@
 <select class="form-select bg-warning" aria-label="Default select example">
   <option selected>Month</option>
   <?php
-    for ($num = 0; $num <= 11; $num++) {
-  
-    $month = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-        echo "<option value=\"$num\">$month[$num]</option>";
+
+   $month = array("Month","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+   $curmonth = date("n");
+      
+    for ($num = 1; $num <= 12; $num++) {
+        if($num == $curmonth){
+        echo "<option value=\"$num\" selected>$month[$num]</option>";
       } 
+      else{
+        
+        echo "<option value=\"$num\">$month[$num]</option>";
+      }
+    }
        ?>
 </select>
 </div>
@@ -46,8 +62,16 @@
 <select class="form-select bg-danger" aria-label="Default select example">
   <option selected>Year</option>
   <?php
-    for ($num = 2022; $num >= 1900; $num--) {
-        echo "<option value=\"$num\">$num</option>";
+    $year = date("Y");
+
+    for ($num = $year ; $num >= 1900; $num--) {
+        $select ="";
+        if($num == $year)
+        {
+            $select = "selected";
+        }
+        
+        echo "<option value=\"$num\" $select>$num</option>";
       } 
        ?>
 </select>
