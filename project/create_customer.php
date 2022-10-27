@@ -56,7 +56,8 @@
         <!-- PHP insert code will be here -->
         <?php
         if ($_POST) {
-            $Username = trim($_POST['Username']);
+            // include database connection
+            $Username = $_POST['Username'];
             $Password = $_POST['Password'];
             $pass = $_POST['pass'];
             $First_name = $_POST['First_name'];
@@ -65,73 +66,110 @@
             $Date_of_birth = $_POST['Date_of_birth'];
             $Account_status = $_POST['Account_status'];
 
-            // include database connection
-            $error = true;
-            include 'config/database.php';
+            $flag = 0;
+            if ($Username == "") {
+                echo "Please enter your username";
+                $flag = 1;
+            }
+            $space = " ";
+            $word = $_POST['Username'];
+            if (strpos($word, $space) !== false) {
+                echo "Username not cannot have space !";
+                $flag = 1;
+            } elseif (strlen($Username) < 6) {
+                echo "Username need at least 6 characters !";
+                $flag = 1;
+            }
 
-            if ($Username == "" || $Password == "" || $First_name == "" || $Last_name == "" || $Date_of_birth == "" || $Gender == "" || $Account_status == "") {
-                echo "Please fill in all the blank ! ";
-            } else {
+            if ($Password == "") {
+                echo "Please enter your password !";
+                $flag = 1;
+            } elseif (!preg_match('/[A-Z]/', $Password)) {
+                echo "Password must include uppercase !";
+                $flag = 1;
+            } elseif (!preg_match('/[a-z]/', $Password)) {
+                echo "Password must include lowercase !";
+                $flag = 1;
+            } elseif (!preg_match('/[0-9]/', $Password)) {
+                echo "Password must include number !";
+                $flag = 1;
+            } elseif (strlen($Password) < 8) {
+                echo "Password need at least 8 character !";
+                $flag = 1;
+            }
 
-                $uppercase = preg_match('/A-Z/', $Password);
-                $lowercase = preg_match('/a-z/', $Password);
-                $num = preg_match('/0-9/', $Password);
+            if ($pass == "") {
+                echo "Please enter to comfirm password !";
+                $flag = 1;
+            } elseif ($Password != $pass) {
+                echo "Password need to same with comfirm password !";
+                $flag = 1;
+            }
 
-                if (strlen($Username) < 6){}
-                else{
-                    echo "Need at least 6 characters !";
-                    $error = false;
-                }
+            if ($First_name == "") {
+                echo "Please enter your first name !";
+                $flag = 1;
+            }
 
-                if (strlen($Password) < 8) {
-                } else {
-                    echo "Need 8 charaters !";
-                    $error = false;
-                }
+            if ($Last_name == "") {
+                echo "Please enter your last name !";
+                $flag = 1;
+            }
 
-                if ($uppercase || $lowercase || $num); {
-                    echo "Must include upper case , lower case and number";
-                    $error = false;
-                }
+            if ($Gender == "") {
+                echo "Please select your gender !";
+                $flag = 1;
+            }
 
-                if ($Password != $pass) {
-                    echo "Please make sure your password are same !";
-                    $error = false;
-                } else {
-                    if ($error = true) {
+            if ($Date_of_birth == "") {
+                echo "Please select your date of birth !";
+                $flag = 1;
+            }
+            $day = $_POST['Date_of_birth'];
+            $today = date("Ymd");
+            $date1 = date_create($day);
+            $date2 = date_create($today);
+            $diff = date_diff($date1, $date2);
+            if ($diff->format("%y") <= "18") {
+                echo "User need 18 years old and above";
+                $flag =1;
+            }
 
-                        try {
-                            // insert query
-                            $query = "INSERT INTO customers SET Username=:Username, Password=:Password, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Registeration=:Registeration,Account_status=:Account_status";
-                            // prepare query for execution
-                            $stmt = $con->prepare($query);
-                            // bind the parameters
-                            $stmt->bindParam(':Username', $Username);
-                            $stmt->bindParam(':Password', $Password);
-                            $stmt->bindParam(':First_name', $First_name);
-                            $stmt->bindParam(':Last_name', $Last_name);
-                            $stmt->bindParam(':Gender', $Gender);
-                            $stmt->bindParam(':Date_of_birth', $Date_of_birth);
-                            $stmt->bindParam(':Account_status', $Account_status);
-                            $register_date = date('Y-m-d H:i:s'); // get the current date and time
-                            $stmt->bindParam(':Registeration', $Registeration);
-                            // Execute the query
-                            if ($stmt->execute()) {
-                                echo "<div class='alert alert-success'>Record was saved.</div>";
-                            } else {
-                                echo "<div class='alert alert-danger'>Unable to save record.</div>";
-                            }
-                        }
-                        // show error
-                        catch (PDOException $exception) {
-                            die('ERROR: ' . $exception->getMessage());
-                        }
+            if ($Account_status == "") {
+                echo "Please enter your account status";
+                $flag = 1;
+            }
+
+            if ($flag == 0) {
+
+                include 'config/database.php';
+                try {
+                    // insert query
+                    $query = "INSERT INTO customers SET Username=:Username, Password=:Password, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Account_status=:Account_status";
+                    // prepare query for execution
+                    $stmt = $con->prepare($query);
+                    // bind the parameters
+                    $stmt->bindParam(':Username', $Username);
+                    $stmt->bindParam(':Password', $Password);
+                    $stmt->bindParam(':First_name', $First_name);
+                    $stmt->bindParam(':Last_name', $Last_name);
+                    $stmt->bindParam(':Gender', $Gender);
+                    $stmt->bindParam(':Date_of_birth', $Date_of_birth);
+                    $stmt->bindParam(':Account_status', $Account_status);
+                    // Execute the query
+                    if ($stmt->execute()) {
+                        echo "<div class='alert alert-success'>Record was saved.</div>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Unable to save record.</div>";
                     }
+                }
+
+                // show error
+                catch (PDOException $exception) {
+                    die('ERROR: ' . $exception->getMessage());
                 }
             }
         }
-
-
         ?>
 
         <!-- html form here where the product information will be entered -->
@@ -162,7 +200,7 @@
                     <td>Gender</td>
                     <td>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" value="female" name="Gender">
+                            <input class="form-check-input" type="radio" value="female" name="Gender" checked>
                             <label class="form-check-label" for="flexRadioDefault1">
                                 Female
                             </label>
@@ -177,13 +215,13 @@
                 </tr>
                 <tr>
                     <td>Date of birth</td>
-                    <td><input type='text' name='Date_of_birth' class='form-control datepicker' /></td>
+                    <td><input type='date' name='Date_of_birth' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Account status</td>
                     <td>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" value="opened" name="Account_status">
+                            <input class="form-check-input" type="radio" value="opened" name="Account_status" checked>
                             <label class="form-check-label" for="flexRadioDefault1">
                                 Opened
                             </label>
