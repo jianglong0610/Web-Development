@@ -29,30 +29,33 @@
     <div class="container">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="home.html">Home</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="http://localhost/web/project/product_create.php#">Create Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="product_read.php">Read Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="customer_read.php">Read customers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
+
+            <a class="navbar-brand" href="home.html">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost/web/project/product_create.php#">Create Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create_new_order.php">Create Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="product_read.php">Read Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customer_read.php">Read customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact Us</a>
+                    </li>
+                </ul>
+
             </div>
         </nav>
         <div class="page-header">
@@ -150,7 +153,7 @@
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                        <a href='product_read.php' class='btn btn-danger'>Back to read products</a>
                     </td>
                 </tr>
             </table>
