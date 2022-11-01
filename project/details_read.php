@@ -101,7 +101,7 @@
                 echo "<td>{$price_3}</td>";
                 echo "<td>";
                 // read one record
-                echo "<a href='product_read_one.php?id={$details_id}' class='btn btn-info m-r-1em'>Read</a>";
+                echo "<a href='#?id={$details_id}' class='btn btn-info m-r-1em'>Read</a>";
 
                 // we will use this links on next part of this post
                 echo "<a href='product_update.php?id={$details_id}' class='btn btn-primary m-r-1em'>Edit</a>";
