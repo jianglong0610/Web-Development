@@ -40,6 +40,12 @@
                             <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="product_read.php">Read Product</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer_read.php">Read customers</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contact Us</a>
                         </li>
                     </ul>
@@ -132,7 +138,7 @@
             $diff = date_diff($date1, $date2);
             if ($diff->format("%y") <= "18") {
                 echo "User need 18 years old and above";
-                $flag =1;
+                $flag = 1;
             }
 
             if ($Account_status == "") {

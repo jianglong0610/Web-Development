@@ -43,6 +43,12 @@
                             <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="product_read.php">Read Product</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer_read.php">Read customers</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contact Us</a>
                         </li>
                     </ul>
