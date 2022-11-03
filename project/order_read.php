@@ -52,7 +52,7 @@
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT order_id, customer_order , total_amount, order_date FROM order_summary ORDER BY order_id DESC";
+        $query = "SELECT order_id, customer_order , order_date FROM order_summary ORDER BY order_id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -71,7 +71,6 @@
             echo "<tr>";
             echo "<th>ID</th>";
             echo "<th>customer_order</th>";
-            echo "<th>total_amount</th>";
             echo "<th>order_date</th>";
             echo "</tr>";
 
@@ -84,7 +83,6 @@
                 echo "<tr>";
                 echo "<td>{$order_id}</td>";
                 echo "<td>{$customer_order}</td>";
-                echo "<td>{$total_amount}</td>";
                 echo "<td>{$order_date}</td>";
                 echo "<td>";
                 // read one record

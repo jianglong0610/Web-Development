@@ -53,7 +53,7 @@
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT details_id, product_1 , product_2, product_3, quantity_1, quantity_2, quantity_3, price_1 , price_2 , price_3 FROM order_details ORDER BY details_id DESC";
+        $query = "SELECT details_id, order_id , product_id , quantity FROM order_details ORDER BY details_id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -71,15 +71,9 @@
             //creating our table heading
             echo "<tr>";
             echo "<th>details_id</th>";
-            echo "<th>product_1</th>";
-            echo "<th>product_2</th>";
-            echo "<th>product_3</th>";
-            echo "<th>quantity_1</th>";
-            echo "<th>quantity_2</th>";
-            echo "<th>quantity_3</th>";
-            echo "<th>price_1</th>";
-            echo "<th>price_2</th>";
-            echo "<th>price_3</th>";
+            echo "<th>order_id</th>";
+            echo "<th>product_id</th>";
+            echo "<th>quantity</th>";
             echo "</tr>";
 
             // retrieve our table contents
@@ -90,15 +84,9 @@
                 // creating new table row per record
                 echo "<tr>";
                 echo "<td>{$details_id}</td>";
-                echo "<td>{$product_1}</td>";
-                echo "<td>{$product_2}</td>";
-                echo "<td>{$product_3}</td>";
-                echo "<td>{$quantity_1}</td>";
-                echo "<td>{$quantity_2}</td>";
-                echo "<td>{$quantity_3}</td>";
-                echo "<td>{$price_1}</td>";
-                echo "<td>{$price_2}</td>";
-                echo "<td>{$price_3}</td>";
+                echo "<td>{$order_id}</td>";
+                echo "<td>{$product_id}</td>";
+                echo "<td>{$quantity}</td>";
                 echo "<td>";
                 // read one record
                 echo "<a href='#?id={$details_id}' class='btn btn-info m-r-1em'>Read</a>";
