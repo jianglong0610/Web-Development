@@ -49,6 +49,9 @@
 
             </div>
         </nav>
+        <div class="page-header d-flex justify-content-center my-3">
+            <h1>Login Page</h1>
+        </div>
 
         <?php
     // include database connection
@@ -106,7 +109,7 @@
                             <input type="checkbox" value="remember-me"> Remember me
                         </label>
                     </div>
-                    <button class="w-50 btn btn-lg btn-primary" type="submit">Sign in</button>
+                    <button class="w-50 btn btn-lg btn-primary" type="submit">Login</button>
                 </table>
             </form>
         </div>
