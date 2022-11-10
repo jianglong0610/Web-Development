@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE HTML>
 <html>
 
@@ -16,80 +19,43 @@
 
 <body>
 
-    <!-- container -->
     <div class="container">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-            <a class="navbar-brand" href="home.html">Home</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/web/project/product_create.php#">Create Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="create_new_order.php">Create Order</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="product_read.php">Read Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="customer_read.php">Read customers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact Us</a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
         <div class="page-header d-flex justify-content-center my-3">
             <h1>Login Page</h1>
         </div>
 
         <?php
-        // include database connection
         include 'config/database.php';
-        session_start();
+
         if (isset($_POST['Username']) && isset($_POST['Password'])) {
 
             $Username = ($_POST['Username']);
             $Password = ($_POST['Password']);
 
-            $select = " SELECT Username, Password, account_status FROM customers WHERE Username = '$Username' && Password = '$Password' ";
+            $select = "SELECT Username, Password, Account_status FROM customers WHERE Username = '$Username'";
             $result = mysqli_query($mysqli, $select);
             $row = mysqli_fetch_assoc($result);
+
             if (mysqli_num_rows($result) == 1) {
-
-                if ($row['Username'] === $Username && $row['Password'] === $Password) {
-                    if ($row['account_status'] != "opened") {
-                        echo "<div class='alert alert-danger'>Your account is closed.</div>";
-                    } else {
-                        header("location:home.html");
-                    }
+                if ($row['Password'] != $Password) {
+                    echo "<div class='alert alert-danger'>Your password is incorrect.</div>";
+                } elseif ($row['Account_status'] != "opened") {
+                    echo "<div class='alert alert-danger'>Your account is closed.</div>";
+                } else {
+                    header("Location: home.php");
+                    $_SESSION["Pass"] = "Pass";
                 }
-            }
-            $findname = " SELECT Username FROM customers WHERE Username = '$Username'";
-            $result2 = mysqli_query($mysqli, $findname);
-            $row = mysqli_fetch_assoc($result2);
-            if (mysqli_num_rows($result2) == 0) {
-                echo "<div class='alert alert-danger'>Wrong Username.</div>";
             } else {
-                $findpass = " SELECT Password FROM customers WHERE Password = '$Password'";
-                $result3 = mysqli_query($mysqli, $findpass);
-                $row = mysqli_fetch_assoc($result3);
-                if (mysqli_num_rows($result3) == 0) {
-
-                    echo "<div class='alert alert-danger'>Wrong Password.</div>";
-                }
+                echo "<div class='alert alert-danger'>Wrong user name.</div>";
             }
+        };
+
+        if ($_GET) {
+            echo "Please make sure you have access";
         }
+
+
         ?>
 
         <div class="container d-flex justify-content-center mt-5">
@@ -110,8 +76,11 @@
                         </label>
                     </div>
                     <button class="w-50 btn btn-lg btn-primary" type="submit">Login</button>
+
                 </table>
+                <a href="create_customer.php">Register now</a>
             </form>
+
         </div>
 
 </body>
