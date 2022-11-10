@@ -62,23 +62,20 @@ include 'check.php'
             $quantity = $_POST['quantity'];
             $flag = true;
 
-            if($customer_order == 'Select Customer Order')
-            {
+            if ($customer_order == 'Select Customer Order') {
                 echo "<div class='alert alert-danger'>Please choose your order.</div>";
                 $flag = false;
             }
-            if($product_id == 'Please select product')
-            {
+            if ($product_id == 'Please select product') {
                 echo "<div class='alert alert-danger'>Please choose your product.</div>";
                 $flag = false;
             }
-            if($quantity == 0)
-            {
+            if ($quantity == 0) {
                 echo "<div class='alert alert-danger'>The quantity cannot be 0</div>";
                 $flag = false;
             }
 
-            if($flag == true){
+            if ($flag == true) {
 
 
                 try {
@@ -102,7 +99,7 @@ include 'check.php'
                         $order_id = $row['order_id'];
                         echo $order_id;
                         echo "<div class='alert alert-success'>Record Save</div>";
-                        for ($star = 0; $star < count($product_id); $star++ ){
+                        for ($star = 0; $star < count($product_id); $star++) {
 
                             try {
                                 // insert query
@@ -113,9 +110,9 @@ include 'check.php'
                                 $stmt->bindParam(':order_id', $order_id);
                                 $stmt->bindParam(':product_id', $product_id[$star]);
                                 $stmt->bindParam(':quantity', $quantity[$star]);
-                
-                                
-                
+
+
+
                                 // Execute the query
                                 if ($stmt->execute()) {
                                     echo "<div class='alert alert-success'>Record was saved.</div>";
@@ -134,9 +131,8 @@ include 'check.php'
                 catch (PDOException $exception) {
                     die('ERROR: ' . $exception->getMessage());
                 }
-            
+            }
         }
-    }
         ?>
 
         <!-- html form here where the product information will be entered -->
@@ -176,83 +172,83 @@ include 'check.php'
                     </td>
                 </tr>
                 <tr class="order">
-                
-                <td>Product 1</td>
-                <td class="d-flex">
-                    <select class="form-select form-select-lg mb-3 col" name="product_id[]"  aria-label=".form-select-lg example">
-                <option>Please select product</option>
-                <?php
-                $query = "SELECT id, name, price FROM products ORDER BY id DESC";
-                $stmt = $con->prepare($query);
-                $stmt->execute();
 
-                $num = $stmt->rowCount();
+                    <td>Product 1</td>
+                    <td class="d-flex">
+                        <select class="form-select form-select-lg mb-3 col" name="product_id[]" aria-label=".form-select-lg example">
+                            <option>Please select product</option>
+                            <?php
+                            $query = "SELECT id, name, price FROM products ORDER BY id DESC";
+                            $stmt = $con->prepare($query);
+                            $stmt->execute();
 
-                if ($num > 0) {
+                            $num = $stmt->rowCount();
 
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            if ($num > 0) {
 
-                        extract($row);
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                echo "<option value=$id>$name</option>";
-                    }
-                }?>
-                </select>
+                                    extract($row);
+
+                                    echo "<option value=$id>$name</option>";
+                                }
+                            } ?>
+                        </select>
 
 
-                </td>
-                <td>Quantity</td>
-                <td><select class="form-select form-select-lg mb-3" name="quantity[]" aria-label=".form-select-lg example">
-                        <option value=0>0</option>
-                        <option value=1>1</option>
-                        <option value=2>2</option>
-                        <option value=3>3</option>
-                    </select></td>
-            </tr>
-            <tr>
-                <td>
+                    </td>
+                    <td>Quantity</td>
+                    <td><select class="form-select form-select-lg mb-3" name="quantity[]" aria-label=".form-select-lg example">
+                            <option value=0>0</option>
+                            <option value=1>1</option>
+                            <option value=2>2</option>
+                            <option value=3>3</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>
 
-                </td>
+                    </td>
+                    <td colspan="3">
+                        <input type="button" value="Add More Product" class="add_one" />
+                        <input type="button" value="Delete" class="delete_one" />
+                    </td>
+
+                </tr>
+
+                <td></td>
                 <td colspan="3">
-                    <input type="button" value="Add More Product" class="add_one" />
-                    <input type="button" value="Delete" class="delete_one" />
+                    <input type='submit' value='Save' class='btn btn-primary' />
+                    <a href='order_read.php' class='btn btn-danger'>Back to read order summary</a>
+                    <a href='order_details_read.php' class='btn btn-danger'>Back to read order details</a>
                 </td>
+                </tr>
+            </table>
+        </form>
 
-            </tr>
-
-            <td></td>
-            <td colspan="3">
-                <input type='submit' value='Save' class='btn btn-primary' />
-                <a href='order_read.php' class='btn btn-danger'>Back to read order summary</a>
-                <a href='order_details_read.php' class='btn btn-danger'>Back to read order details</a>
-            </td>
-            </tr>
-        </table>
-    </form>
-
-    <script>
-        document.addEventListener('click', function(event) {
-            if (event.target.matches('.add_one')) {
-                var element = document.querySelector('.order');
-                var clone = element.cloneNode(true);
-                element.after(clone);
-            }
-            if (event.target.matches('.delete_one')) {
-                var total = document.querySelectorAll('.order').length;
-                if (total > 1) {
+        <script>
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('.add_one')) {
                     var element = document.querySelector('.order');
-                    element.remove(element);
+                    var clone = element.cloneNode(true);
+                    element.after(clone);
                 }
-            }
-            var total = document.querySelectorAll('.order').length;
-       
-            var row = document.getElementById('.order').rows;
-            for (var i = 1; i <= total; i++) {
-                row[i].cells[0].innerHTML = i ;
-             
-            }
-        }, false);
-    </script>
+                if (event.target.matches('.delete_one')) {
+                    var total = document.querySelectorAll('.order').length;
+                    if (total > 1) {
+                        var element = document.querySelector('.order');
+                        element.remove(element);
+                    }
+                }
+                var total = document.querySelectorAll('.order').length;
+
+                var row = document.getElementById('.order').rows;
+                for (var i = 1; i <= total; i++) {
+                    row[i].cells[0].innerHTML = i;
+
+                }
+            }, false);
+        </script>
     </div>
     <!-- end .container -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
