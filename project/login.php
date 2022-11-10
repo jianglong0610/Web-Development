@@ -54,43 +54,43 @@
         </div>
 
         <?php
-    // include database connection
-    include 'config/database.php';
-    session_start();
-    if (isset($_POST['Username']) && isset($_POST['Password'])) {
+        // include database connection
+        include 'config/database.php';
+        session_start();
+        if (isset($_POST['Username']) && isset($_POST['Password'])) {
 
-        $Username = ($_POST['Username']);
-        $Password = ($_POST['Password']);
+            $Username = ($_POST['Username']);
+            $Password = ($_POST['Password']);
 
-        $select = " SELECT Username, Password, account_status FROM customers WHERE Username = '$Username' && Password = '$Password' ";
-        $result = mysqli_query($mysqli, $select);
-        $row = mysqli_fetch_assoc($result);
-        if (mysqli_num_rows($result) == 1) {
+            $select = " SELECT Username, Password, account_status FROM customers WHERE Username = '$Username' && Password = '$Password' ";
+            $result = mysqli_query($mysqli, $select);
+            $row = mysqli_fetch_assoc($result);
+            if (mysqli_num_rows($result) == 1) {
 
-            if ($row['Username'] === $Username && $row['Password'] === $Password) {
-                if ($row['account_status'] != "opened") {
-                    echo "<div class='alert alert-danger'>Your account is closed.</div>";
-                } else {
-                    header("location:home.html");
+                if ($row['Username'] === $Username && $row['Password'] === $Password) {
+                    if ($row['account_status'] != "opened") {
+                        echo "<div class='alert alert-danger'>Your account is closed.</div>";
+                    } else {
+                        header("location:home.html");
+                    }
+                }
+            }
+            $findname = " SELECT Username FROM customers WHERE Username = '$Username'";
+            $result2 = mysqli_query($mysqli, $findname);
+            $row = mysqli_fetch_assoc($result2);
+            if (mysqli_num_rows($result2) == 0) {
+                echo "<div class='alert alert-danger'>Wrong Username.</div>";
+            } else {
+                $findpass = " SELECT Password FROM customers WHERE Password = '$Password'";
+                $result3 = mysqli_query($mysqli, $findpass);
+                $row = mysqli_fetch_assoc($result3);
+                if (mysqli_num_rows($result3) == 0) {
+
+                    echo "<div class='alert alert-danger'>Wrong Password.</div>";
                 }
             }
         }
-        $findname = " SELECT Username FROM customers WHERE Username = '$Username'";
-        $result2 = mysqli_query($mysqli, $findname);
-        $row = mysqli_fetch_assoc($result2);
-        if (mysqli_num_rows($result2) == 0) {
-            echo "<div class='alert alert-danger'>Wrong Username.</div>";
-        } else {
-            $findpass = " SELECT Password FROM customers WHERE Password = '$Password'";
-            $result3 = mysqli_query($mysqli, $findpass);
-            $row = mysqli_fetch_assoc($result3);
-            if (mysqli_num_rows($result3) == 0) {
-
-                echo "<div class='alert alert-danger'>Wrong Password.</div>";
-            }
-        }
-    }
-    ?>
+        ?>
 
         <div class="container d-flex justify-content-center mt-5">
             <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST">
