@@ -31,7 +31,6 @@ include 'check.php'
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="create_customer.php">create customer</a></li>
-                            <li><a class="dropdown-item" href="customer_edit_details.php">edit customer</a></li>
                             <li><a class="dropdown-item" href="customer_read.php">read customer</a></li>
                         </ul>
                     </li>
@@ -50,8 +49,7 @@ include 'check.php'
                             Product
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="create_product.php">create product</a></li>
-                            <li><a class="dropdown-item" href="product_edit_details.php">edit product</a></li>
+                            <li><a class="dropdown-item" href="product_create.php">create product</a></li>
                             <li><a class="dropdown-item" href="product_read.php">read product</a></li>
                         </ul>
                     </li>
