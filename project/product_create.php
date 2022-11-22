@@ -39,27 +39,40 @@ include 'check.php'
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/web/project/product_create.php#">Create Product</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Customer
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="create_customer.php">create customer</a></li>
+                            <li><a class="dropdown-item" href="customer_read.php">read customer</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://localhost/web/project/create_customer.php">Create Customer</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Order
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="create_new_order.php">create order</a></li>
+                            <li><a class="dropdown-item" href="order_list.php">order list</a></li>
+                            <li><a class="dropdown-item" href="order_details.php">order details</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="create_new_order.php">Create Order</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="product_read.php">Read Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="customer_read.php">Read customers</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Product
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="product_create.php">create product</a></li>
+                            <li><a class="dropdown-item" href="product_read.php">read product</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact Us</a>
                     </li>
                 </ul>
-
             </div>
+
         </nav>
         <div class="page-header">
             <h1>Create Product</h1>
