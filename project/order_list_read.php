@@ -110,7 +110,7 @@ include 'check.php'
                 <td><?php echo htmlspecialchars($customer_order, ENT_QUOTES);  ?></td>
             </tr>
             <tr>
-                <td>Price</td>
+                <td>Order Date</td>
                 <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
             </tr>
             <tr>
