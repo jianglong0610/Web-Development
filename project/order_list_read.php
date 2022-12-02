@@ -69,57 +69,56 @@ include 'check.php'
         //include database connection
         include 'config/database.php';
 
+
+        $money = "SELECT sum(price*quantity) AS total_price FROM order_details INNER JOIN order_summary ON order_summary.order_id = order_details.order_id INNER JOIN products ON products.id = order_details.product_id WHERE order_summary.order_id =:order_id GROUP BY order_summary.order_id";
+        $stmt = $con->prepare($money);
+        $stmt->bindParam(":order_id", $id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        extract($row);
+
+
         // read current record's data
         try {
-            // prepare select query
-            $query = "SELECT order_id, customer_order, order_date FROM order_summary WHERE order_id = :order_id ";
+            $query = "SELECT * FROM order_details INNER JOIN products ON products.id = order_details.product_id INNER JOIN order_summary ON order_summary.order_id = order_details.order_id WHERE order_details.order_id=:order_id";
             $stmt = $con->prepare($query);
-
-            // Bind the parameter
             $stmt->bindParam(":order_id", $id);
-
-            // execute our query
             $stmt->execute();
-
-            // store retrieved row to a variable
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // values to fill up our form
-            $order_id = $row['order_id'];
-            $customer_order = $row['customer_order'];
-            $order_date = $row['order_date'];
-            // shorter way to do that is extract($row)
-        }
-
-        // show error
-        catch (PDOException $exception) {
+            $count = $stmt->rowCount();
+            if ($count > 0) {
+                echo "<table class='table table-hover table-responsive table-borderless w-50 border border-3'>";
+                
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    extract($row);
+                    $plus = $price * $quantity;
+                    echo "<tr>";
+                    echo "<td class='col-4'>{$name}</td>";
+                    $price = htmlspecialchars(number_format($price, 2, '.', ''));
+                    echo "<td class='col-3 text-center'>RM {$price}</td>";
+                    echo "<td class='col-2 text-center'><strong>X</strong> &nbsp&nbsp{$quantity}</td>";
+                    $plus = htmlspecialchars(number_format($plus, 2, '.', ''));
+                    echo "<td class='col-3 text-end'>RM {$plus}</td>";
+                    echo "</tr>";
+                }
+            }
+            echo "<tr class='border border-3'>";
+            echo "<td class='col-2' >Total Price</td>";
+            echo "<td colspan=4 class='text-end'>";
+            $dprice = htmlspecialchars(round(number_format($total_price, 2, '.', '')));
+            echo "RM $dprice";
+            echo "</td></tr></table>";
+        } catch (PDOException $exception) {
             die('ERROR: ' . $exception->getMessage());
         }
+        // show error
         ?>
 
 
 
         <!--we have our html table here where the record will be displayed-->
-        <table class='table table-hover table-responsive table-bordered'>
-            <tr>
-                <td>Name</td>
-                <td><?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?></td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td><?php echo htmlspecialchars($customer_order, ENT_QUOTES);  ?></td>
-            </tr>
-            <tr>
-                <td>Order Date</td>
-                <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <a href='order_list.php' class='btn btn-danger'>Back to read products</a>
-                </td>
-            </tr>
-        </table>
+        <div class="w-50 d-flex justify-content-end">
+            <a href='order_list.php' class='btn btn-danger'>Back to read Order Summary</a>
+        </div>
 
 
     </div> <!-- end .container -->
