@@ -26,7 +26,7 @@ try {
         if ($stmt->execute()) {
             // redirect to read records page and
             // tell the user record was deleted
-            header('Location: order_detials.php?action=deleted');
+            header('Location: order_details.php?action=deleted');
         } else {
             die('Unable to delete record.');
         }
@@ -38,7 +38,7 @@ try {
         if ($stmt->execute()) {
             // redirect to read records page and
             // tell the user record was deleted
-            header('Location: order_detials.php?action=deleted');
+            header('Location: order_details.php?action=deleted');
         } else {
             die('Unable to delete record.');
         }

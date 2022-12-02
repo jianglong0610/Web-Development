@@ -232,8 +232,8 @@ include 'check.php'
                     <td></td>
                     <td colspan="3">
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='order_read.php' class='btn btn-danger'>Back to read order summary</a>
-                        <a href='details_read.php' class='btn btn-danger'>Back to read order details</a>
+                        <a href='order_list.php' class='btn btn-danger'>Back to read order summary</a>
+                        <a href='order_details.php' class='btn btn-danger'>Back to read order details</a>
                     </td>
                     </tr>
                 </table>

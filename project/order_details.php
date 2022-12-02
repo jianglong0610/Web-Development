@@ -67,6 +67,13 @@ include 'check.php'
         include 'config/database.php';
 
         // delete message prompt will be here
+        $action = isset($_GET['action']) ? $_GET['action'] : "";
+
+        // if it was redirected from delete.php
+        if ($action == 'deleted') {
+            echo "<div class='alert alert-success'>Record was deleted.</div>";
+        }
+
 
         // select all data
         $query = "SELECT details_id, order_id , product_id , quantity FROM order_details ORDER BY details_id DESC";
@@ -111,7 +118,7 @@ include 'check.php'
                 echo "<a href='order_details_edit.php?id={$details_id}' class='btn btn-primary m-r-1em'>Edit</a>";
 
                 // we will use this links on next part of this post
-                echo "<a href='#' onclick='delete_product({$details_id});'  class='btn btn-danger'>Delete</a>";
+                echo "<a href='#' onclick='delete_order({$details_id});'  class='btn btn-danger'>Delete</a>";
                 echo "</td>";
                 echo "</tr>";
             }
@@ -126,6 +133,18 @@ include 'check.php'
 
 
     </div> <!-- end .container -->
+
+    <script type='text/javascript'>
+        // confirm record deletion
+        function delete_order(id) {
+
+            if (confirm('Are you sure?')) {
+                // if user clicked ok,
+                // pass the id to delete.php and execute the delete query
+                window.location = 'order_details_delete.php?id=' + id;
+            }
+        }
+    </script>
 
     <!-- confirm delete record will be here -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
