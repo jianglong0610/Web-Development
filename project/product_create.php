@@ -31,49 +31,9 @@ include 'check.php'
     <!-- container -->
     <div class="container">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-            <a class="navbar-brand" href="home.php">Home</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Customer
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="create_customer.php">create customer</a></li>
-                            <li><a class="dropdown-item" href="customer_read.php">read customer</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Order
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="create_new_order.php">create order</a></li>
-                            <li><a class="dropdown-item" href="order_list.php">order list</a></li>
-                            <li><a class="dropdown-item" href="order_details.php">order details</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Product
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="product_create.php">create product</a></li>
-                            <li><a class="dropdown-item" href="product_read.php">read product</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-
-        </nav>
+        <?php
+        include 'top_nav.php'
+        ?>
         <div class="page-header">
             <h1>Create Product</h1>
         </div>
@@ -103,7 +63,7 @@ include 'check.php'
                     include 'config/database.php';
                     try {
                         // insert query
-                        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price,  manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
+                        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, image=:image,  manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
                         // prepare query for execution
                         $stmt = $con->prepare($query);
                         // bind the parameters
@@ -111,6 +71,11 @@ include 'check.php'
                         $stmt->bindParam(':description', $description);
                         $stmt->bindParam(':price', $price);
                         $stmt->bindParam(':promotion_price', $promotion_price);
+                        $image = !empty($_FILES["image"]["name"])
+                            ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                            : "";
+                        $image = htmlspecialchars(strip_tags($image));
+                        $stmt->bindParam(':image', $image);
                         $stmt->bindParam(':manufacture_date', $manufacture_date);
                         $stmt->bindParam(':expired_date', $expired_date);
                         $created = date('Y-m-d H:i:s'); // get the current date and time
@@ -118,6 +83,63 @@ include 'check.php'
                         // Execute the query
                         if ($stmt->execute()) {
                             echo "<div class='alert alert-success'>Record was saved.</div>";
+                            // now, if image is not empty, try to upload the image
+                            if ($image) {
+
+                                // upload to file to folder
+                                $target_directory = "uploads/";
+                                $target_file = $target_directory . $image;
+                                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+                                // error message is empty
+                                $file_upload_error_messages = "";
+                                // make sure that file is a real image
+                                $check = getimagesize($_FILES["image"]["tmp_name"]);
+                                if ($check !== false) {
+                                    // submitted file is an image
+                                } else {
+                                    $file_upload_error_messages .= "<div>Submitted file is not an image.</div>";
+                                }
+                                // make sure certain file types are allowed
+                                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                                if (!in_array($file_type, $allowed_file_types)) {
+                                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                                }
+                                // make sure file does not exist
+                                if (file_exists($target_file)) {
+                                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
+                                }
+                                // make sure submitted file is not too large, can't be larger than 1 MB
+                                if ($_FILES['image']['size'] > (1024000)) {
+                                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
+                                }
+                                // make sure the 'uploads' folder exists
+                                // if not, create it
+                                if (!is_dir($target_directory)) {
+                                    mkdir($target_directory, 0777, true);
+                                }
+                                // if $file_upload_error_messages is still empty
+                                if (empty($file_upload_error_messages)) {
+                                    // it means there are no errors, so try to upload the file
+                                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                                        // it means photo was uploaded
+                                    } else {
+                                        echo "<div class='alert alert-danger'>";
+                                        echo "<div>Unable to upload photo.</div>";
+                                        echo "<div>Update the record to upload photo.</div>";
+                                        echo "</div>";
+                                    }
+                                }
+
+                                // if $file_upload_error_messages is NOT empty
+                                else {
+                                    // it means there are some errors, so show them to user
+                                    echo "<div class='alert alert-danger'>";
+                                    echo "<div>{$file_upload_error_messages}</div>";
+                                    echo "<div>Update the record to upload photo.</div>";
+                                    echo "</div>";
+                                }
+                            }
                         } else {
                             echo "<div class='alert alert-danger'>Unable to save record.</div>";
                         }
@@ -133,7 +155,7 @@ include 'check.php'
         ?>
 
         <!-- html form here where the product information will be entered -->
-        <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Name</td>
@@ -152,6 +174,11 @@ include 'check.php'
                     <td><input type='text' name='promotion_price' class='form-control' /></td>
 
                 </tr>
+                <tr>
+                    <td>Photo</td>
+                    <td><input type="file" name="image" /></td>
+                </tr>
+
                 <tr>
                     <td>Manufacture Date</td>
                     <td><input type='text' name='manufacture_date' class='form-control datepicker' /></td>
