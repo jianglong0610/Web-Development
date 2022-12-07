@@ -36,6 +36,7 @@
         <?php
         include 'top_nav.php'
         ?>
+
         <div class="page-header">
             <h1>Update Product</h1>
         </div>
@@ -176,7 +177,7 @@
 
 
         <!--we have our html form here where new record information can be updated-->
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post" enctype="multipart/form-data">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Name</td>
@@ -192,7 +193,7 @@
                 </tr>
                 <tr>
                     <td>Images</td>
-                    <td><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" />
+                    <td><div><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                         <div><input type="file" name="image" value="<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                     </td>
                 </tr>
