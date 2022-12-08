@@ -50,108 +50,128 @@ include 'check.php'
             $date1 = date_create($manufacture_date);
             $date2 = date_create($expired_date);
             $diff = date_diff($date1, $date2);
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $file_upload_error_messages = "";
 
-            if ($name == "" || $description == "" || $price == "" || $promotion_price == "" || $manufacture_date == "" || $expired_date == "") {
-                echo "Please fill in all the blank ! ";
-            } else {
-                if ($promotion_price >= $price) {
-                    echo "Please make sure the promotion price is cheaper than original price";
-                } elseif ($diff->format("%R%a") <= "0") {
-                    echo "Expired date must be after the manufacture date";
-                } else {
+            if ($name == "" || $description == "" || $price == "" || $manufacture_date == "" || $expired_date == "" || $image == "") {
+                $file_upload_error_messages .= "<div>Please fill in all the blank !</div>";
+            }
+            if ($price == "") {
+                $file_upload_error_messages .= "<div>Please make sure price are not empty</div>";
+            } elseif (preg_match('/[A-Z]/', $price)) {
+                $file_upload_error_messages .= "<div>Please make sure price are not contain capital A-Z</div>";
+            } elseif (preg_match('/[a-z]/', $price)) {
+                $file_upload_error_messages .= "<div>Please make sure price are not contain capital a-z</div>";
+            } elseif ($price < 0) {
+                $file_upload_error_messages .= "<div>Please make sure price are not negative</div>";
+            } elseif ($price > 1000) {
+                $file_upload_error_messages .= "<div>Please make sure price are not more than RM1000</div>";
+            }
 
-                    include 'config/database.php';
-                    try {
-                        // insert query
-                        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, image=:image,  manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
-                        // prepare query for execution
-                        $stmt = $con->prepare($query);
-                        // bind the parameters
-                        $stmt->bindParam(':name', $name);
-                        $stmt->bindParam(':description', $description);
-                        $stmt->bindParam(':price', $price);
-                        $stmt->bindParam(':promotion_price', $promotion_price);
-                        $image = !empty($_FILES["image"]["name"])
-                            ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                            : "";
-                        $image = htmlspecialchars(strip_tags($image));
-                        $stmt->bindParam(':image', $image);
-                        $stmt->bindParam(':manufacture_date', $manufacture_date);
-                        $stmt->bindParam(':expired_date', $expired_date);
-                        $created = date('Y-m-d H:i:s'); // get the current date and time
-                        $stmt->bindParam(':created', $created);
-                        // Execute the query
-                        if ($stmt->execute()) {
-                            echo "<div class='alert alert-success'>Record was saved.</div>";
-                            // now, if image is not empty, try to upload the image
-                            if ($image) {
+            if ($promotion_price == "") {
+                $promotion_price = NULL;
+            } elseif (preg_match('/[A-Z]/', $promotion_price)) {
+                $file_upload_error_messages .= "<div>Please make sure promotion price are not contain capital A-Z</div>";
+            } elseif (preg_match('/[a-z]/', $promotion_price)) {
+                $file_upload_error_messages .= "<div>Please make sure promotion price are not contain capital a-z</div>";
+            } elseif ($promotion_price < 0) {
+                $file_upload_error_messages .= "<div>Please make sure promotion price are not negative</div>";
+            } elseif ($promotion_price > 1000) {
+                $file_upload_error_messages .= "<div class='alert alert-danger'>Please make sure promotion price are not more than RM1000</div>";
+            }
+            if ($promotion_price >= $price) {
+                $file_upload_error_messages .= "<div>Please make sure the promotion price is cheaper than original price</div>";
+            }
+            if ($expired_date == "") {
+                $expired_date = NULL;
+            }
+            if ($diff->format("%R%a") <= "0") {
+                $file_upload_error_messages .= "<div>Expired date must be after the manufacture date</div>";
+            }
 
-                                // upload to file to folder
-                                $target_directory = "uploads/";
-                                $target_file = $target_directory . $image;
-                                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
-                                // error message is empty
-                                $file_upload_error_messages = "";
-                                // make sure that file is a real image
-                                $check = getimagesize($_FILES["image"]["tmp_name"]);
-                                if ($check !== false) {
-                                    // submitted file is an image
-                                } else {
-                                    $file_upload_error_messages .= "<div>Submitted file is not an image.</div>";
-                                }
-                                // make sure certain file types are allowed
-                                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
-                                if (!in_array($file_type, $allowed_file_types)) {
-                                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
-                                }
-                                // make sure file does not exist
-                                if (file_exists($target_file)) {
-                                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
-                                }
-                                // make sure submitted file is not too large, can't be larger than 1 MB
-                                if ($_FILES['image']['size'] > (1024000)) {
-                                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
-                                }
-                                // make sure the 'uploads' folder exists
-                                // if not, create it
-                                if (!is_dir($target_directory)) {
-                                    mkdir($target_directory, 0777, true);
-                                }
-                                // if $file_upload_error_messages is still empty
-                                if (empty($file_upload_error_messages)) {
-                                    // it means there are no errors, so try to upload the file
-                                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                                        // it means photo was uploaded
-                                    } else {
-                                        echo "<div class='alert alert-danger'>";
-                                        echo "<div>Unable to upload photo.</div>";
-                                        echo "<div>Update the record to upload photo.</div>";
-                                        echo "</div>";
-                                    }
-                                }
+            // now, if image is not empty, try to upload the image
+            if ($image) {
 
-                                // if $file_upload_error_messages is NOT empty
-                                else {
-                                    // it means there are some errors, so show them to user
-                                    echo "<div class='alert alert-danger'>";
-                                    echo "<div>{$file_upload_error_messages}</div>";
-                                    echo "<div>Update the record to upload photo.</div>";
-                                    echo "</div>";
-                                }
-                            }
-                        } else {
-                            echo "<div class='alert alert-danger'>Unable to save record.</div>";
-                        }
-                    }
+                // upload to file to folder
+                $target_directory = "uploads/";
+                $target_file = $target_directory . $image;
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
-                    // show error
-                    catch (PDOException $exception) {
-                        die('ERROR: ' . $exception->getMessage());
+                // make sure that file is a real image
+                $check = getimagesize($_FILES["image"]["tmp_name"]);
+                if ($check === false) {
+                    // submitted file is an image
+                    $file_upload_error_messages .= "<div>Submitted file is not an image.</div>";
+                }
+                // make sure certain file types are allowed
+                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                if (!in_array($file_type, $allowed_file_types)) {
+                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                }
+                // make sure file does not exist
+                if (file_exists($target_file)) {
+                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
+                }
+                // make sure submitted file is not too large, can't be larger than 1 MB
+                if ($_FILES['image']['size'] > (1024000)) {
+                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
+                }
+                // make sure the 'uploads' folder exists
+                // if not, create it
+                if (!is_dir($target_directory)) {
+                    mkdir($target_directory, 0777, true);
+                }
+                // if $file_upload_error_messages is still empty
+                if (empty($file_upload_error_messages)) {
+                    // it means there are no errors, so try to upload the file
+                    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        echo "<div class='alert alert-danger'>";
+                        echo "<div>Unable to upload photo.</div>";
+                        echo "<div>Update the record to upload photo.</div>";
+                        echo "</div>";
                     }
                 }
             }
+            if (!empty($file_upload_error_messages)) {
+                echo "<div class='alert alert-danger'>{$file_upload_error_messages}</div>";
+            } else {
+
+
+                include 'config/database.php';
+                try {
+                    // insert query
+                    $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, image=:image,  manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
+                    // prepare query for execution
+                    $stmt = $con->prepare($query);
+                    // bind the parameters
+                    $stmt->bindParam(':name', $name);
+                    $stmt->bindParam(':description', $description);
+                    $stmt->bindParam(':price', $price);
+                    $stmt->bindParam(':promotion_price', $promotion_price);
+                    $image = htmlspecialchars(strip_tags($image));
+                    $stmt->bindParam(':image', $image);
+                    $stmt->bindParam(':manufacture_date', $manufacture_date);
+                    $stmt->bindParam(':expired_date', $expired_date);
+                    $created = date('Y-m-d H:i:s'); // get the current date and time
+                    $stmt->bindParam(':created', $created);
+                    // Execute the query
+                    if ($stmt->execute()) {
+                        echo "<div class='alert alert-success'>Record was saved.</div>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Unable to save record.</div>";
+                    }
+                }
+
+                // show error
+                catch (PDOException $exception) {
+                    die('ERROR: ' . $exception->getMessage());
+                }
+            }
         }
+
         ?>
 
         <!-- html form here where the product information will be entered -->
