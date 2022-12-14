@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>product customer</title>
+    <title>create customer</title>
     <!-- Latest compiled and minified Bootstrap CSS -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +25,7 @@
     <!-- container -->
     <div class="container">
 
-    <?php
+        <?php
         include 'top_nav.php'
         ?>
 
@@ -47,6 +47,10 @@
             $Gender = $_POST['Gender'];
             $Date_of_birth = $_POST['Date_of_birth'];
             $Account_status = $_POST['Account_status'];
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : htmlspecialchars($image, ENT_QUOTES);
+            $error_message = "";
 
             $flag = 0;
             if ($Username == "") {
@@ -122,12 +126,56 @@
                 $flag = 1;
             }
 
+            if ($_FILES["image"]["name"]) {
+
+                // upload to file to folder
+                $target_directory = "uploads/";
+                $target_file = $target_directory . $image;
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+                // make sure that file is a real image
+                $check = getimagesize($_FILES["image"]["tmp_name"]);
+                if ($check === false) {
+                    $error_message .= "<div class='alert alert-danger'>Submitted file is not an image.</div>";
+                }
+                // make sure certain file types are allowed
+                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                if (!in_array($file_type, $allowed_file_types)) {
+                    $error_message .= "<div class='alert alert-danger'>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                }
+                // make sure file does not exist
+                if (file_exists($target_file)) {
+                    $error_message .= "<div class='alert alert-danger'>Image already exists. Try to change file name.</div>";
+                }
+                // make sure submitted file is not too large, can't be larger than 1 MB
+                if ($_FILES['image']['size'] > (1024000)) {
+                    $error_message .= "<div class='alert alert-danger'>Image must be less than 1 MB in size.</div>";
+                }
+                // make sure the 'uploads' folder exists
+                // if not, create it
+                if (!is_dir($target_directory)) {
+                    mkdir($target_directory, 0777, true);
+                }
+                // if $file_upload_error_messages is still empty
+                if (empty($error_message)) {
+                    // it means there are no errors, so try to upload the file
+                    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        $error_message .= "<div class='alert alert-danger>Unable to upload photo.</div>";
+                        $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
+                    }
+                }
+            }
+
+            if (!empty($error_message)) {
+                echo "<div class='alert alert-danger'>{$error_message}</div>";
+            }
+
             if ($flag == 0) {
 
                 include 'config/database.php';
                 try {
                     // insert query
-                    $query = "INSERT INTO customers SET Username=:Username, Password=:Password, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Account_status=:Account_status";
+                    $query = "INSERT INTO customers SET Username=:Username, Password=:Password, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Account_status=:Account_status, image=:image";
                     // prepare query for execution
                     $stmt = $con->prepare($query);
                     // bind the parameters
@@ -138,6 +186,7 @@
                     $stmt->bindParam(':Gender', $Gender);
                     $stmt->bindParam(':Date_of_birth', $Date_of_birth);
                     $stmt->bindParam(':Account_status', $Account_status);
+                    $stmt->bindParam(':image', $image);
                     // Execute the query
                     if ($stmt->execute()) {
                         echo "<div class='alert alert-success'>Record was saved.</div>";
@@ -156,7 +205,7 @@
 
         <!-- html form here where the product information will be entered -->
 
-        <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST">
+        <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST" enctype="multipart/form-data">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Username</td>
@@ -215,6 +264,10 @@
                             </label>
                         </div>
                     </td>
+                </tr>
+                <tr>
+                    <td>Photo</td>
+                    <td><input type="file" name="image" /></td>
                 </tr>
                 <tr>
                     <td></td>

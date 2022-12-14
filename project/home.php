@@ -25,7 +25,7 @@ include 'check.php'
             <h1>Home</h1>
         </div>
 
-        <div class="container-fluid row m-0 bg-primary d-flex justify-content-between align-items-center">
+        <div class="container-fluid row m-0 bg-danger d-flex justify-content-between align-items-center">
             <div class="col-5">
                 <?php
                 include 'config/database.php';

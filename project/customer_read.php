@@ -23,6 +23,10 @@ include 'check.php'
         </div>
 
         <?php
+
+        if (isset($_GET['update'])) {
+            echo "<div class='alert alert-success'>Record was updated.</div>";
+        }
         // include database connection
         include 'config/database.php';
 
@@ -35,7 +39,7 @@ include 'check.php'
         }
 
         // select all data
-        $query = "SELECT id, Username, First_name, Last_name, Gender , Date_of_birth , Account_status FROM customers ORDER BY id DESC";
+        $query = "SELECT * FROM customers ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -54,11 +58,11 @@ include 'check.php'
             echo "<tr>";
             echo "<th>ID</th>";
             echo "<th>Username</th>";
-            echo "<th>First name</th>";
-            echo "<th>Last name</th>";
             echo "<th>Gender</th>";
             echo "<th>Date of birth</th>";
             echo "<th>Account status</th>";
+            echo "<th>Image</th>";
+            echo "<th>Action</th>";
             echo "</tr>";
 
             // retrieve our table contents
@@ -68,14 +72,13 @@ include 'check.php'
                 extract($row);
                 // creating new table row per record
                 echo "<tr>";
-                echo "<td>{$id}</td>";
-                echo "<td>{$Username}</td>";
-                echo "<td>{$First_name}</td>";
-                echo "<td>{$Last_name}</td>";
-                echo "<td>{$Gender}</td>";
-                echo "<td>{$Date_of_birth}</td>";
-                echo "<td>{$Account_status}</td>";
-                echo "<td>";
+                echo "<td class='col-1'>{$id}</td>";
+                echo "<td class='col-1'>{$Username}</td>";
+                echo "<td class='col-1'>{$Gender}</td>";
+                echo "<td class='col-2'>{$Date_of_birth}</td>";
+                echo "<td class='col-1'>{$Account_status}</td>";
+                echo "<td class='col-3 text-center'><img src='uploads/$image' class ='w-25'</td>";
+                echo "<td class='3'>";
                 // read one record
                 echo "<a href='customer_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";
 

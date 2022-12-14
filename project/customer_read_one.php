@@ -18,7 +18,7 @@ include 'check.php'
         include 'top_nav.php'
         ?>
         <div class="page-header">
-            <h1>Read Product</h1>
+            <h1>Read Customers</h1>
         </div>
 
         <?php
@@ -32,7 +32,7 @@ include 'check.php'
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, Username, First_name, Last_name, Gender , Date_of_birth , Account_status FROM customers WHERE id = :id ";
+            $query = "SELECT * FROM customers WHERE id = :id ";
             $stmt = $con->prepare($query);
 
             // Bind the parameter
@@ -51,6 +51,7 @@ include 'check.php'
             $Gender = $row['Gender'];
             $Date_of_birth = $row['Date_of_birth'];
             $Account_status = $row['Account_status'];
+            $image = $row['image'];
 
             // shorter way to do that is extract($row)
         }
@@ -90,8 +91,13 @@ include 'check.php'
                 <td><?php echo htmlspecialchars($Account_status, ENT_QUOTES);  ?></td>
             </tr>
             <tr>
+                <td>Images</td>
+                <td><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td>
+                    <?php echo "<a href='customer_edit_details.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>"; ?>
                     <a href='customer_read.php' class='btn btn-danger'>Back to read customers</a>
                 </td>
             </tr>

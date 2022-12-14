@@ -57,7 +57,13 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // values to fill up our form
-            extract($row);
+            $Username = $row['Username'];
+            $First_name = $row['First_name'];
+            $Last_name = $row['Last_name'];
+            $Gender = $row['Gender'];
+            $Date_of_birth = $row['Date_of_birth'];
+            $Account_status = $row['Account_status'];
+            $image = $row['image'];
         }
 
         // show error
@@ -66,80 +72,19 @@
         }
         ?>
 
-        <!-- HTML form to update record will be here -->
-
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post">
-            <table class='table table-hover table-responsive table-bordered'>
-                <tr>
-                    <td>Username</td>
-                    <td><input type='text' name='Username' value="<?php echo htmlspecialchars($Username, ENT_QUOTES);  ?>" class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>Old Password</td>
-                    <td><input type='text' name='passw' class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>New Password</td>
-                    <td><input type='text' name='new_pass' class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>Comfirm Password</td>
-                    <td><input type='text' name='comfirm_password' class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>First Name</td>
-                    <td><input type='text' name='First_name' value="<?php echo htmlspecialchars($First_name, ENT_QUOTES);  ?>" class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>Last Name</td>
-                    <td><input type='text' name='Last_name' value="<?php echo htmlspecialchars($Last_name, ENT_QUOTES);  ?>" class='form-control' /></td>
-                </tr>
-                <tr>
-                    <td>Gender</td>
-                    <td>
-                        <div><input disabled type='text' name="Gender" value="<?php echo htmlspecialchars($Gender, ENT_QUOTES);  ?>" /></div>
-                        <div class="ms-4 col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio1" value="male" checked>
-                            <label class="form-check-label" for="inlineRadio1">Male</label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio2" value="female">
-                            <label class="form-check-label" for="inlineRadio2">Female</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Birthday</td>
-                    <td><input placeholder="Select birthday" type='date' name='Date_of_birth' value="<?php echo htmlspecialchars($Date_of_birth, ENT_QUOTES);  ?>" class='form-control ' /></td>
-                </tr>
-                <tr>
-                    <td>Account Status</td>
-                    <td>
-                        <div><input disabled type='text' name="Account_status" value="<?php echo htmlspecialchars($Account_status, ENT_QUOTES);  ?>" /></div>
-                        <div class="ms-4 col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio3" value="active" checked>
-                            <label class="form-check-label" for="inlineRadio3">Active</label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio4" value="closed">
-                            <label class="form-check-label" for="inlineRadio4">Closed</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <input type='submit' value='Save Changes' class='btn btn-primary' />
-                        <a href='customers_read.php' class='btn btn-danger'>Back to read customers</a>
-                    </td>
-                </tr>
-            </table>
-        </form>
         <!-- PHP post to update record will be here -->
         <?php
         // check if form was submitted
         if ($_POST) {
             try {
+                $Username = $_POST['Username'];
+                $First_name = $_POST['First_name'];
+                $Last_name = $_POST['Last_name'];
+                $Date_of_birth = $_POST['Date_of_birth'];
+                $image = !empty($_FILES["image"]["name"])
+                    ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                    : htmlspecialchars($image, ENT_QUOTES);
+                $error_message = "";
                 $today = date("Y-m-d");
                 $date1 = date_create($Date_of_birth);
                 $date2 = date_create($today);
@@ -200,6 +145,50 @@
                     }
                 }
 
+                if ($_FILES["image"]["name"]) {
+
+                    // upload to file to folder
+                    $target_directory = "uploads/";
+                    $target_file = $target_directory . $image;
+                    $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+                    // make sure that file is a real image
+                    $check = getimagesize($_FILES["image"]["tmp_name"]);
+                    if ($check === false) {
+                        $error_message .= "<div class='alert alert-danger'>Submitted file is not an image.</div>";
+                    }
+                    // make sure certain file types are allowed
+                    $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                    if (!in_array($file_type, $allowed_file_types)) {
+                        $error_message .= "<div class='alert alert-danger'>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                    }
+                    // make sure file does not exist
+                    if (file_exists($target_file)) {
+                        $error_message .= "<div class='alert alert-danger'>Image already exists. Try to change file name.</div>";
+                    }
+                    // make sure submitted file is not too large, can't be larger than 1 MB
+                    if ($_FILES['image']['size'] > (1024000)) {
+                        $error_message .= "<div class='alert alert-danger'>Image must be less than 1 MB in size.</div>";
+                    }
+                    // make sure the 'uploads' folder exists
+                    // if not, create it
+                    if (!is_dir($target_directory)) {
+                        mkdir($target_directory, 0777, true);
+                    }
+                    // if $file_upload_error_messages is still empty
+                    if (empty($error_message)) {
+                        // it means there are no errors, so try to upload the file
+                        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                            $error_message .= "<div class='alert alert-danger>Unable to upload photo.</div>";
+                            $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
+                        }
+                    }
+                }
+
+                if (!empty($error_message)) {
+                    echo "<div class='alert alert-danger'>{$error_message}</div>";
+                }
+
 
                 if ($result < 6570) {
                     echo "<div class='alert alert-danger'>Only above 18 years old can save.</div>";
@@ -214,7 +203,7 @@
                 // it is better to label them and not use question marks
                 if ($pass == true) {
                     $query = "UPDATE customers
-                  SET Username=:Username, Password=:new_pass, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Account_status=:Account_status WHERE id = :id";
+                  SET Username=:Username, Password=:new_pass, First_name=:First_name, Last_name=:Last_name, Gender=:Gender, Date_of_birth=:Date_of_birth, Account_status=:Account_status, image=:image WHERE id = :id";
                     // prepare query for excecution
                     $stmt = $con->prepare($query);
                     // posted values
@@ -237,10 +226,11 @@
                     $stmt->bindParam(':Gender', $Gender);
                     $stmt->bindParam(':Date_of_birth', $Date_of_birth);
                     $stmt->bindParam(':Account_status', $Account_status);
+                    $stmt->bindParam(':image', $image);
                     $stmt->bindParam(':id', $id);
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo "<div class='alert alert-success'>Record was saved.</div>";
+                        header("Location: customer_read.php?update={$id}");
                     } else {
                         echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
                     }
@@ -253,6 +243,82 @@
         } ?>
 
         <!--we have our html form here where new record information can be updated-->
+        <!-- HTML form to update record will be here -->
+
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post" enctype="multipart/form-data">
+            <table class='table table-hover table-responsive table-bordered'>
+                <tr>
+                    <td>Username</td>
+                    <td><input type='text' name='Username' value="<?php echo htmlspecialchars($Username, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Old Password</td>
+                    <td><input type='text' name='passw' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>New Password</td>
+                    <td><input type='text' name='new_pass' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Comfirm Password</td>
+                    <td><input type='text' name='comfirm_password' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>First Name</td>
+                    <td><input type='text' name='First_name' value="<?php echo htmlspecialchars($First_name, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><input type='text' name='Last_name' value="<?php echo htmlspecialchars($Last_name, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>
+                        <div><input disabled type='text' name="Gender" value="<?php echo htmlspecialchars($Gender, ENT_QUOTES);  ?>" /></div>
+                        <div class="ms-4 col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio1" value="male" checked>
+                            <label class="form-check-label" for="inlineRadio1">Male</label>
+                        </div>
+                        <div class="col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio2" value="female">
+                            <label class="form-check-label" for="inlineRadio2">Female</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Birthday</td>
+                    <td><input placeholder="Select birthday" type='date' name='Date_of_birth' value="<?php echo htmlspecialchars($Date_of_birth, ENT_QUOTES);  ?>" class='form-control ' /></td>
+                </tr>
+                <tr>
+                    <td>Account Status</td>
+                    <td>
+                        <div><input disabled type='text' name="Account_status" value="<?php echo htmlspecialchars($Account_status, ENT_QUOTES);  ?>" /></div>
+                        <div class="ms-4 col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio3" value="active" checked>
+                            <label class="form-check-label" for="inlineRadio3">Active</label>
+                        </div>
+                        <div class="col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio4" value="closed">
+                            <label class="form-check-label" for="inlineRadio4">Closed</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Images</td>
+                    <td>
+                        <div><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
+                        <div><input type="file" name="image" value="<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type='submit' value='Save Changes' class='btn btn-primary' />
+                        <a href='customers_read.php' class='btn btn-danger'>Back to read customers</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
 
 
     </div>
