@@ -83,6 +83,7 @@
             <tr>
                 <td></td>
                 <td>
+                <?php echo "<a href='order_details_edit.php?id={$details_id}' class='btn btn-primary m-r-1em'>Edit</a>" ?>
                     <a href='order_details.php' class='btn btn-danger'>Back to read Order Details</a>
                 </td>
             </tr>

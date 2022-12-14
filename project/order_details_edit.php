@@ -35,7 +35,7 @@
         include 'top_nav.php'
         ?>
         <div class="page-header">
-            <h1>Update Product</h1>
+            <h1>Update Order Details</h1>
         </div>
         <!-- PHP read record by ID will be here -->
         <?php
@@ -98,7 +98,7 @@
                 $stmt->bindParam(':details_id', $details_id);
                 // Execute the query
                 if ($stmt->execute()) {
-                    echo "<div class='alert alert-success'>Record was updated.</div>";
+                    header("Location: order_details.php?update={$id}");
                 } else {
                     echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
                 }

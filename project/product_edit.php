@@ -40,7 +40,10 @@
         <div class="page-header">
             <h1>Update Product</h1>
         </div>
-        <!-- PHP read record by ID will be here -->
+
+
+        <!-- HTML form to update record will be here -->
+        <!-- PHP post to update record will be here -->
         <?php
         // get passed parameter value, in this case, the record ID
         // isset() is a PHP function used to verify if a value is there or not
@@ -77,34 +80,27 @@
         }
         ?>
 
-        <!-- HTML form to update record will be here -->
-        <!-- PHP post to update record will be here -->
         <?php
         // check if form was submitted
         if ($_POST) {
 
+            $name = $_POST['name'];
+            $description = $_POST['description'];
             $price = $_POST['price'];
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                : "";
-            $image = htmlspecialchars(strip_tags($image));
+                : htmlspecialchars($image, ENT_QUOTES);
             $error_message = "";
 
             if ($price == "") {
-                $error_message .= "<div>Please make sure price are not empty</div>";
-            } elseif (preg_match('/[A-Z]/', $price)) {
-                $error_message .= "<div class='alert alert-danger'>Please make sure price are not contain capital A-Z</div>";
-            } elseif (preg_match('/[a-z]/', $price)) {
-                $error_message .= "<div class='alert alert-danger'>Please make sure price are not contain capital a-z</div>";
-            } elseif ($price < 0) {
-                $error_message .= "<div class='alert alert-danger'>Please make sure price are not negative</div>";
-            } elseif ($price > 1000) {
-                $error_message .= "<div class='alert alert-danger'>Please make sure price are not more than RM1000</div>";
+                $error_message .= "<div class='alert alert-danger'>Please make sure price are not empty</div>";
+            } elseif (!is_numeric($price)) {
+                $error_message .= "<div class='alert alert-danger'>Please make sure price only have number</div>";
             }
 
 
             // now, if image is not empty, try to upload the image
-            if ($image) {
+            if ($_FILES["image"]["name"]) {
 
                 // upload to file to folder
                 $target_directory = "uploads/";
@@ -138,8 +134,8 @@
                 if (empty($error_message)) {
                     // it means there are no errors, so try to upload the file
                     if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                        echo "<div class='alert alert-danger>Unable to upload photo.</div>";
-                        echo "<div class='alert alert-danger>Update the record to upload photo.</div>";
+                        $error_message .= "<div class='alert alert-danger>Unable to upload photo.</div>";
+                        $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
                     }
                 }
             }
@@ -168,7 +164,7 @@
                     $stmt->bindParam(':id', $id);
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo "<div class='alert alert-success'>Record was updated.</div>";
+                        header("Location: product_read.php?update={$id}");
                     } else {
                         echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
                     }
@@ -178,7 +174,33 @@
                     die('ERROR: ' . $exception->getMessage());
                 }
             }
-        } ?>
+        }
+        ?>
+
+        <?php
+        if (isset($_POST['delete'])) {
+            $image = htmlspecialchars(strip_tags($image));
+
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $target_directory = "uploads/";
+            $target_file = $target_directory . $image;
+            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+            unlink("uploads/" . $row['image']);
+            $_POST['image'] = null;
+            $query = "UPDATE products
+        SET image=:image WHERE id = :id";
+            // prepare query for excecution
+            $stmt = $con->prepare($query);
+            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':id', $id);
+            // Execute the query
+            $stmt->execute();
+        }
+
+        ?>
 
 
 
@@ -202,6 +224,7 @@
                     <td>
                         <div><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                         <div><input type="file" name="image" value="<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
+                        <div><input type='submit' name='delete' value='Delete Image' class='btn btn-danger' /></div>
                     </td>
                 </tr>
                 <tr>
