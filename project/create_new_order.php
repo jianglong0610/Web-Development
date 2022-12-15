@@ -171,14 +171,15 @@ include 'check.php'
                             </select>
 
 
-                        </td>
-                        <td>Quantity</td>
-                        <td><select class="form-select form-select-lg mb-3" name="quantity[]" aria-label=".form-select-lg example">
+                        
+                            <td>Quantity</td>
+                            <td><select class="form-select form-select-lg mb-3" name="quantity[]" aria-label=".form-select-lg example">
                                 <option value=0>0</option>
                                 <option value=1>1</option>
                                 <option value=2>2</option>
                                 <option value=3>3</option>
                             </select></td>
+                            
                     </tr>
                     <tr>
                         <td>
