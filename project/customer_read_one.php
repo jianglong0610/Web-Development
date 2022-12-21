@@ -29,6 +29,16 @@ include 'check.php'
         //include database connection
         include 'config/database.php';
 
+        $action = isset($_GET['action']) ? $_GET['action'] : "";
+
+        // if it was redirected from delete.php
+        if ($action == 'deleted') {
+            echo "<div class='alert alert-success'>Record was deleted.</div>";
+        }
+        if ($action == 'nodelete') {
+            echo "<div class='alert alert-danger'>This customer cant be delete.</div>";
+        }
+
         // read current record's data
         try {
             // prepare select query
@@ -99,6 +109,7 @@ include 'check.php'
                 <td>
                     <?php echo "<a href='customer_edit_details.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>"; ?>
                     <a href='customer_read.php' class='btn btn-danger'>Back to read customers</a>
+                    <?php echo "<a href='customer_delete.php?id={$id}' onclick='delete_customers({$id});'  class='btn btn-danger'>Delete</a>"; ?>
                 </td>
             </tr>
         </table>
