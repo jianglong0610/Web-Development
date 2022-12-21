@@ -241,6 +241,31 @@
             }
         } ?>
 
+        <?php
+        if (isset($_POST['delete'])) {
+            $image = htmlspecialchars(strip_tags($image));
+
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $target_directory = "uploads/";
+            $target_file = $target_directory . $image;
+            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+            unlink("uploads/" . $row['image']);
+            $_POST['image'] = null;
+            $query = "UPDATE customers
+        SET image=:image WHERE id = :id";
+            // prepare query for excecution
+            $stmt = $con->prepare($query);
+            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':id', $id);
+            // Execute the query
+            $stmt->execute();
+        }
+
+        ?>
+
         <!--we have our html form here where new record information can be updated-->
         <!-- HTML form to update record will be here -->
 
@@ -273,15 +298,36 @@
                 <tr>
                     <td>Gender</td>
                     <td>
-                        <div><input disabled type='text' name="Gender" value="<?php echo htmlspecialchars($Gender, ENT_QUOTES);  ?>" /></div>
-                        <div class="ms-4 col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio1" value="male" checked>
-                            <label class="form-check-label" for="inlineRadio1">Male</label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Gender" id="inlineRadio2" value="female">
-                            <label class="form-check-label" for="inlineRadio2">Female</label>
-                        </div>
+                        <?php
+                        $account = "SELECT gender FROM customers WHERE id=:id";
+                        $stmt = $con->prepare($account);
+                        $stmt->bindParam(":id", $id);
+                        $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        extract($row);
+                        if ($Gender == "male") { ?>
+
+                            <div class="ms-4 col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="male" checked>
+                                <label class="form-check-label" for="inlineRadio3">Male</label>
+                            </div>
+                            <div class="col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio4" value="female">
+                                <label class="form-check-label" for="inlineRadio4">Female</label>
+                            </div>
+                        <?php
+                        } else { ?>
+                            <div class="ms-4 col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="male">
+                                <label class="form-check-label" for="inlineRadio3">Male</label>
+                            </div>
+                            <div class="col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio4" value="female" checked>
+                                <label class="form-check-label" for="inlineRadio4">Female</label>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr>
@@ -291,15 +337,36 @@
                 <tr>
                     <td>Account Status</td>
                     <td>
-                        <div><input disabled type='text' name="Account_status" value="<?php echo htmlspecialchars($Account_status, ENT_QUOTES);  ?>" /></div>
-                        <div class="ms-4 col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio3" value="active" checked>
-                            <label class="form-check-label" for="inlineRadio3">Active</label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio4" value="closed">
-                            <label class="form-check-label" for="inlineRadio4">Closed</label>
-                        </div>
+                        <?php
+                        $account = "SELECT account_status FROM customers WHERE id=:id";
+                        $stmt = $con->prepare($account);
+                        $stmt->bindParam(":id", $id);
+                        $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        extract($row);
+                        if ($account_status == "opened") { ?>
+
+                            <div class="ms-4 col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio3" value="active" checked>
+                                <label class="form-check-label" for="inlineRadio3">Active</label>
+                            </div>
+                            <div class="col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio4" value="closed">
+                                <label class="form-check-label" for="inlineRadio4">Closed</label>
+                            </div>
+                        <?php
+                        } else { ?>
+                            <div class="ms-4 col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio3" value="active">
+                                <label class="form-check-label" for="inlineRadio3">Active</label>
+                            </div>
+                            <div class="col-2 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio4" value="closed" checked>
+                                <label class="form-check-label" for="inlineRadio4">Closed</label>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr>
@@ -307,6 +374,7 @@
                     <td>
                         <div><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                         <div><input type="file" name="image" value="<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
+                        <div><input type='submit' name='delete' value='Delete Image' class='btn btn-danger' /></div>
                     </td>
                 </tr>
                 <tr>

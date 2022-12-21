@@ -137,7 +137,13 @@ include 'check.php'
             }
             if (!empty($file_upload_error_messages)) {
                 echo "<div class='alert alert-danger'>{$file_upload_error_messages}</div>";
-            } else {
+            } 
+            
+            if($image == null){
+                $image = "broken_image.jpg";
+            }
+            
+            else {
 
 
                 include 'config/database.php';

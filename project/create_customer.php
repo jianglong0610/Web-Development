@@ -49,7 +49,8 @@
             $Account_status = $_POST['Account_status'];
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                : htmlspecialchars($image, ENT_QUOTES);
+                :"";
+            $image = htmlspecialchars(strip_tags($image));
             $error_message = "";
 
             $flag = 0;
@@ -164,6 +165,10 @@
                         $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
                     }
                 }
+            }
+
+            if($image == null){
+                $image = "profile.jpg";
             }
 
             if (!empty($error_message)) {

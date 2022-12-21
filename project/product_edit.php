@@ -140,6 +140,10 @@
                 }
             }
 
+            if($image == null){
+                $image = "broken_image.jpg";
+            }
+
             if (!empty($error_message)) {
                 echo "<div class='alert alert-danger'>{$error_message}</div>";
             } else {
