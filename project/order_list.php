@@ -64,7 +64,8 @@ include 'check.php'
                 echo "<tr>";
                 echo "<td>{$order_id}</td>";
                 echo "<td>{$customer_order}</td>";
-                echo "<td>{$total_price}</td>";
+                $total_price = htmlspecialchars(number_format($total_price, 2, '.', ''));
+                echo "<td>RM {$total_price}</td>";
                 echo "<td>{$order_date}</td>";
                 echo "<td>";
                 // read one record

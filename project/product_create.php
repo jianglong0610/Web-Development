@@ -39,6 +39,7 @@ include 'check.php'
         </div>
 
         <?php
+        $name = $description = $price = $promotion_price = $manufacture_date = $expired_date = "";
         if ($_POST) {
             // include database connection
             $name = $_POST['name'];
@@ -55,7 +56,7 @@ include 'check.php'
                 : "";
             $file_upload_error_messages = "";
 
-            if ($name == "" || $description == "" || $price == "" || $manufacture_date == "" || $expired_date == "" || $image == "") {
+            if ($name == "" || $description == "" || $price == "" || $manufacture_date == "") {
                 $file_upload_error_messages .= "<div>Please fill in all the blank !</div>";
             }
             if ($price == "") {
@@ -185,19 +186,19 @@ include 'check.php'
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Name</td>
-                    <td><input type='text' name='name' class='form-control' /></td>
+                    <td><input type='text' name='name' value='<?php echo $name ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Description</td>
-                    <td><textarea type='text' name='description' class='form-control'></textarea></td>
+                    <td><textarea type='text' name='description' class='form-control'><?php echo $description ?></textarea></td>
                 </tr>
                 <tr>
                     <td>Price</td>
-                    <td><input type='text' name='price' class='form-control' /></td>
+                    <td><input type='text' name='price' value='<?php echo $price ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Promotion price</td>
-                    <td><input type='text' name='promotion_price' class='form-control' /></td>
+                    <td><input type='text' name='promotion_price' value='<?php echo $promotion_price ?>' class='form-control' /></td>
 
                 </tr>
                 <tr>
@@ -207,11 +208,11 @@ include 'check.php'
 
                 <tr>
                     <td>Manufacture Date</td>
-                    <td><input type='text' name='manufacture_date' class='form-control datepicker' /></td>
+                    <td><input type='text' name='manufacture_date' value='<?php echo $manufacture_date ?>' class='form-control datepicker' /></td>
                 </tr>
                 <tr>
                     <td>Expired Date</td>
-                    <td><input type='text' name='expired_date' class='form-control datepicker' /></td>
+                    <td><input type='text' name='expired_date' value='<?php echo $expired_date ?>' class='form-control datepicker' /></td>
                 </tr>
                 <tr>
                     <td></td>

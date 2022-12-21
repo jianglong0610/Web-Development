@@ -37,6 +37,7 @@
         <!-- html form to create product will be here -->
         <!-- PHP insert code will be here -->
         <?php
+        $Username = $First_name = $Last_name = $Date_of_birth = "";
         if ($_POST) {
             // include database connection
             $Username = $_POST['Username'];
@@ -214,7 +215,7 @@
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Username</td>
-                    <td><input type='text' name='Username' class='form-control' /></td>
+                    <td><input type='text' name='Username' value='<?php echo $Username ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Password</td>
@@ -226,11 +227,11 @@
                 </tr>
                 <tr>
                     <td>First_name</td>
-                    <td><input type='text' name='First_name' class='form-control' /></td>
+                    <td><input type='text' name='First_name' value='<?php echo $First_name ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Last_name</td>
-                    <td><input type='text' name='Last_name' class='form-control' /></td>
+                    <td><input type='text' name='Last_name' value='<?php echo $Last_name ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Gender</td>
@@ -251,7 +252,7 @@
                 </tr>
                 <tr>
                     <td>Date of birth</td>
-                    <td><input type='date' name='Date_of_birth' class='form-control' /></td>
+                    <td><input type='date' name='Date_of_birth' value='<?php echo $Date_of_birth ?>' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Account status</td>

@@ -64,7 +64,7 @@ include 'check.php'
             echo "<tr class='border border-3'>";
             echo "<td class='col-2' >Total Price</td>";
             echo "<td colspan=4 class='text-end'>";
-            $dprice = htmlspecialchars(round(number_format($total_price, 2, '.', '')));
+            $dprice = htmlspecialchars(number_format($total_price, 2, '.', ''));
             echo "RM $dprice";
             echo "</td></tr></table>";
         } catch (PDOException $exception) {
