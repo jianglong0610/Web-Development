@@ -61,37 +61,28 @@ include 'check.php'
             }
             if ($price == "") {
                 $file_upload_error_messages .= "<div>Please make sure price are not empty</div>";
-            } elseif (preg_match('/[A-Z]/', $price)) {
-                $file_upload_error_messages .= "<div>Please make sure price are not contain capital A-Z</div>";
-            } elseif (preg_match('/[a-z]/', $price)) {
-                $file_upload_error_messages .= "<div>Please make sure price are not contain capital a-z</div>";
-            } elseif ($price < 0) {
-                $file_upload_error_messages .= "<div>Please make sure price are not negative</div>";
-            } elseif ($price > 1000) {
-                $file_upload_error_messages .= "<div>Please make sure price are not more than RM1000</div>";
-            }
+            } elseif (!is_numeric($price)) {
+                $file_upload_error_messages .= "<div>Please make sure price are number only</div>";
+            } 
 
             if ($promotion_price == "") {
                 $promotion_price = NULL;
-            } elseif (preg_match('/[A-Z]/', $promotion_price)) {
-                $file_upload_error_messages .= "<div>Please make sure promotion price are not contain capital A-Z</div>";
-            } elseif (preg_match('/[a-z]/', $promotion_price)) {
-                $file_upload_error_messages .= "<div>Please make sure promotion price are not contain capital a-z</div>";
-            } elseif ($promotion_price < 0) {
-                $file_upload_error_messages .= "<div>Please make sure promotion price are not negative</div>";
-            } elseif ($promotion_price > 1000) {
-                $file_upload_error_messages .= "<div class='alert alert-danger'>Please make sure promotion price are not more than RM1000</div>";
+            } elseif (!is_numeric($promotion_price)) {
+                $file_upload_error_messages .= "<div>Please make sure promotion price are number only</div>";
             }
             if ($promotion_price >= $price) {
                 $file_upload_error_messages .= "<div>Please make sure the promotion price is cheaper than original price</div>";
             }
+
             if ($expired_date == "") {
                 $expired_date = NULL;
             }
+            
             if ($diff->format("%R%a") <= "0") {
                 $file_upload_error_messages .= "<div>Expired date must be after the manufacture date</div>";
             }
 
+            
 
             // now, if image is not empty, try to upload the image
             if ($image) {
@@ -136,13 +127,16 @@ include 'check.php'
                     }
                 }
             }
+
+            if($image == null){
+                $image = "broken_image.jpg";
+            }
+
             if (!empty($file_upload_error_messages)) {
                 echo "<div class='alert alert-danger'>{$file_upload_error_messages}</div>";
             } 
             
-            if($image == null){
-                $image = "broken_image.jpg";
-            }
+            
             
             else {
 
