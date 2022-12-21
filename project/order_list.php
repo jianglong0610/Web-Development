@@ -22,13 +22,17 @@ include 'check.php'
         </div>
 
         <?php
+
+        if (isset($_GET['update'])) {
+            echo "<div class='alert alert-success'>Record was updated.</div>";
+        }
         // include database connection
         include 'config/database.php';
 
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT order_id, customer_order , order_date FROM order_summary ORDER BY order_id DESC";
+        $query = "SELECT * , sum(price*quantity) AS total_price FROM order_details INNER JOIN order_summary ON order_summary.order_id = order_details.order_id INNER JOIN products ON products.id = order_details.product_id GROUP BY order_summary.order_id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -47,6 +51,7 @@ include 'check.php'
             echo "<tr>";
             echo "<th>ID</th>";
             echo "<th>customer_order</th>";
+            echo "<th>total_price</th>";
             echo "<th>order_date</th>";
             echo "</tr>";
 
@@ -59,6 +64,7 @@ include 'check.php'
                 echo "<tr>";
                 echo "<td>{$order_id}</td>";
                 echo "<td>{$customer_order}</td>";
+                echo "<td>{$total_price}</td>";
                 echo "<td>{$order_date}</td>";
                 echo "<td>";
                 // read one record

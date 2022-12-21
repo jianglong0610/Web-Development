@@ -214,9 +214,9 @@
                     }
                     $first_name = htmlspecialchars(strip_tags($_POST['First_name']));
                     $last_name = htmlspecialchars(strip_tags($_POST['Last_name']));
-                    $gender = htmlspecialchars(strip_tags($_POST['Gender']));
+                    $Gender = htmlspecialchars(strip_tags($_POST['Gender']));
                     $date_of_birth = htmlspecialchars(strip_tags($_POST['Date_of_birth']));
-                    $account_status = htmlspecialchars(strip_tags($_POST['Account_status']));
+                    $Account_status = htmlspecialchars(strip_tags($_POST['Account_status']));
                     // bind the parameters
                     $stmt->bindParam(':Username', $Username);
                     $stmt->bindParam(':new_pass', $new_pass);
@@ -299,7 +299,7 @@
                     <td>Gender</td>
                     <td>
                         <?php
-                        $account = "SELECT gender FROM customers WHERE id=:id";
+                        $account = "SELECT Gender FROM customers WHERE id=:id";
                         $stmt = $con->prepare($account);
                         $stmt->bindParam(":id", $id);
                         $stmt->execute();
@@ -308,21 +308,21 @@
                         if ($Gender == "male") { ?>
 
                             <div class="ms-4 col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="male" checked>
+                                <input class="form-check-input" type="radio" name="Gender" id="inlineRadio3" value="male" checked>
                                 <label class="form-check-label" for="inlineRadio3">Male</label>
                             </div>
                             <div class="col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio4" value="female">
+                                <input class="form-check-input" type="radio" name="Gender" id="inlineRadio4" value="female">
                                 <label class="form-check-label" for="inlineRadio4">Female</label>
                             </div>
                         <?php
                         } else { ?>
                             <div class="ms-4 col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="male">
+                                <input class="form-check-input" type="radio" name="Gender" id="inlineRadio3" value="male">
                                 <label class="form-check-label" for="inlineRadio3">Male</label>
                             </div>
                             <div class="col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="inlineRadio4" value="female" checked>
+                                <input class="form-check-input" type="radio" name="Gender" id="inlineRadio4" value="female" checked>
                                 <label class="form-check-label" for="inlineRadio4">Female</label>
                             </div>
                         <?php
@@ -338,30 +338,30 @@
                     <td>Account Status</td>
                     <td>
                         <?php
-                        $account = "SELECT account_status FROM customers WHERE id=:id";
+                        $account = "SELECT Account_status FROM customers WHERE id=:id";
                         $stmt = $con->prepare($account);
                         $stmt->bindParam(":id", $id);
                         $stmt->execute();
                         $row = $stmt->fetch(PDO::FETCH_ASSOC);
                         extract($row);
-                        if ($account_status == "opened") { ?>
+                        if ($Account_status == "opened") { ?>
 
                             <div class="ms-4 col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio3" value="active" checked>
+                                <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio3" value="opened" checked>
                                 <label class="form-check-label" for="inlineRadio3">Active</label>
                             </div>
                             <div class="col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio4" value="closed">
+                                <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio4" value="closed">
                                 <label class="form-check-label" for="inlineRadio4">Closed</label>
                             </div>
                         <?php
                         } else { ?>
                             <div class="ms-4 col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio3" value="active">
+                                <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio3" value="opened">
                                 <label class="form-check-label" for="inlineRadio3">Active</label>
                             </div>
                             <div class="col-2 form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="account_status" id="inlineRadio4" value="closed" checked>
+                                <input class="form-check-input" type="radio" name="Account_status" id="inlineRadio4" value="closed" checked>
                                 <label class="form-check-label" for="inlineRadio4">Closed</label>
                             </div>
                         <?php

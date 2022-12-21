@@ -16,7 +16,7 @@ include 'check.php'
 <body>
     <div class="container">
         <!-- container -->
-        
+
         <?php
         include 'top_nav.php'
         ?>
@@ -113,11 +113,11 @@ include 'check.php'
             <!-- html form here where the product information will be entered -->
             <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST">
 
-                <table class='table table-hover table-responsive table-bordered'>
+                <table class='table table-hover table-responsive table-bordered' id='delete_row'>
 
                     <tr>
                         <td>customer_order</td>
-                        <td colspan="3">
+                        <td colspan="4">
                             <select class="form-select form-select-lg mb-3" name="customer_order" aria-label=".form-select-lg example">
                                 <option>Select Customer Order</option>
                                 <?php
@@ -146,9 +146,9 @@ include 'check.php'
                             </select>
                         </td>
                     </tr>
-                    <tr class="order">
+                    <tr class="pRow">
 
-                        <td>Product 1</td>
+                        <td>Product</td>
                         <td class="d-flex">
                             <select class="form-select form-select-lg mb-3 col" name="product_id[]" aria-label=".form-select-lg example">
                                 <option>Please select product</option>
@@ -171,65 +171,71 @@ include 'check.php'
                             </select>
 
 
-                        
-                            <td>Quantity</td>
-                            <td><select class="form-select form-select-lg mb-3" name="quantity[]" aria-label=".form-select-lg example">
-                                <option value=0>0</option>
-                                <option value=1>1</option>
-                                <option value=2>2</option>
-                                <option value=3>3</option>
-                            </select></td>
-                            
+
+                        <td>Quantity</td>
+                        <td><input type='number' name='quantity[]' value='$quantity'/
+                        <td><input type="button" value="Delete" onclick="deleteRow(this)"></td>
+                        </td>
+
                     </tr>
                     <tr>
                         <td>
 
                         </td>
-                        <td colspan="3">
+                        <td colspan="4">
                             <input type="button" value="Add More Product" class="add_one" />
-                            <input type="button" value="Delete" class="delete_one" />
                         </td>
 
                     </tr>
 
                     <td></td>
-                    <td colspan="3">
-                        <input type='submit' value='Save' class='btn btn-primary' />
+                    <td colspan="4">
+                        <input type='submit' value='Save Changes' class='btn btn-primary' onclick="checkDuplicate(event)" />
                         <a href='order_list.php' class='btn btn-danger'>Back to read order summary</a>
-                        <a href='order_details.php' class='btn btn-danger'>Back to read order details</a>
                     </td>
                     </tr>
                 </table>
             </form>
 
-            <script>
-                document.addEventListener('click', function(event) {
-                    if (event.target.matches('.add_one')) {
-                        var element = document.querySelector('.order');
-                        var clone = element.cloneNode(true);
-                        element.after(clone);
-                    }
-                    if (event.target.matches('.delete_one')) {
-                        var total = document.querySelectorAll('.order').length;
-                        if (total > 1) {
-                            var element = document.querySelector('.order');
-                            element.remove(element);
-                        }
-                    }
-                    var total = document.querySelectorAll('.order').length;
-
-                    var row = document.getElementById('.order').rows;
-                    for (var i = 1; i <= total; i++) {
-                        row[i].cells[0].innerHTML = i;
-
-                    }
-                }, false);
-            </script>
         </div>
         <!-- end .container -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
 
+        </script>
+
+        <script>
+            function checkDuplicate(event) {
+                var newarray = [];
+                var selects = document.getElementsByTagName('select');
+                for (var i = 0; i < selects.length; i++) {
+                    newarray.push(selects[i].value);
+                }
+                if (newarray.length !== new Set(newarray).size) {
+                    alert("There are duplicate item in the array");
+                    event.preventDefault();
+                }
+            }
+        </script>
+
+        <script>
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('.add_one')) {
+                    var element = document.querySelector('.pRow');
+                    var clone = element.cloneNode(true);
+                    element.after(clone);
+                }
+            }, false);
+        </script>
+
+        <script>
+            function deleteRow(r) {
+                var total = document.querySelectorAll('.pRow').length;
+                if (total > 1) {
+                    var i = r.parentNode.parentNode.rowIndex;
+                    document.getElementById("delete_row").deleteRow(i);
+                }
+            }
         </script>
 </body>
 
