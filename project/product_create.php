@@ -88,7 +88,7 @@ include 'check.php'
             if ($image) {
 
                 // upload to file to folder
-                $target_directory = "uploads/";
+                $target_directory = "uploads/product/";
                 $target_file = $target_directory . $image;
                 $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 

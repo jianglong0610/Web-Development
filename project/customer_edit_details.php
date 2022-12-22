@@ -147,7 +147,7 @@
                 if ($_FILES["image"]["name"]) {
 
                     // upload to file to folder
-                    $target_directory = "uploads/";
+                    $target_directory = "uploads/customer/";
                     $target_file = $target_directory . $image;
                     $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
@@ -248,11 +248,11 @@
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                 : "";
-            $target_directory = "uploads/";
+            $target_directory = "uploads/customer/";
             $target_file = $target_directory . $image;
             $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
-            unlink("uploads/" . $row['image']);
+            unlink("uploads/customer/" . $row['image']);
             $_POST['image'] = null;
             $query = "UPDATE customers
         SET image=:image WHERE id = :id";
@@ -372,7 +372,7 @@
                 <tr>
                     <td>Images</td>
                     <td>
-                        <div><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
+                        <div><img src="uploads/customer/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                         <div><input type="file" name="image" value="<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
                         <div><input type='submit' name='delete' value='Delete Image' class='btn btn-danger' /></div>
                     </td>

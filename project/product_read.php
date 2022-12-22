@@ -74,7 +74,7 @@ include 'check.php'
                 echo "<td class='col-1'>{$id}</td>";
                 echo "<td class='col-2'>{$name}</td>";
                 echo "<td class='col-2'>{$description}</td>";
-                echo "<td class='col-3 text-center'><img src='uploads/$image' class ='w-25'</td>";
+                echo "<td class='col-3 text-center'><img src='uploads/product/$image' class ='w-25'</td>";
                 $price = number_format((float)$price, 2, '.', '');
                 echo "<td class='col-1'>{$price}</td>";
                 echo "<td class='col-3'>";

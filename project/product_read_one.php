@@ -86,7 +86,7 @@ include 'check.php'
             </tr>
             <tr>
                 <td>Images</td>
-                <td><img src="uploads/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></td>
+                <td><img src="uploads/product/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></td>
             </tr>
             <tr>
                 <td></td>
