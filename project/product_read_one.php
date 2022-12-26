@@ -58,7 +58,10 @@ include 'check.php'
             $name = $row['name'];
             $description = $row['description'];
             $price = $row['price'];
+            $promotion_price = $row['promotion_price'];
             $image = $row['image'];
+            $manufacture_date = $row['manufacture_date'];
+            $expired_date = $row['expired_date'];
             // shorter way to do that is extract($row)
         }
 
@@ -85,8 +88,20 @@ include 'check.php'
                 <td><?php echo htmlspecialchars($price, ENT_QUOTES);  ?></td>
             </tr>
             <tr>
+                <td>Promotion Price</td>
+                <td><?php echo htmlspecialchars($promotion_price, ENT_QUOTES);  ?></td>
+            </tr>
+            <tr>
                 <td>Images</td>
                 <td><img src="uploads/product/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></td>
+            </tr>
+            <tr>
+                <td>Manufacture date</td>
+                <td><?php echo htmlspecialchars($manufacture_date, ENT_QUOTES);  ?></td>
+            </tr>
+            <tr>
+                <td>expired date</td>
+                <td><?php echo htmlspecialchars($expired_date, ENT_QUOTES);  ?></td>
             </tr>
             <tr>
                 <td></td>

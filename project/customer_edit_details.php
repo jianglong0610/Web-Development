@@ -182,6 +182,8 @@
                             $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
                         }
                     }
+                } elseif (empty($image)) {
+                    $image = "profile.jpg";
                 }
 
                 if (!empty($error_message)) {

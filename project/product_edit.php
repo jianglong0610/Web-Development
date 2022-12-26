@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function() {
+            $(".datepicker").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+    </script>
+
     <!-- custom css -->
     <style>
         .m-r-1em {
@@ -44,6 +56,7 @@
 
         <!-- HTML form to update record will be here -->
         <!-- PHP post to update record will be here -->
+        <!-- PHP read record by ID will be here -->
         <?php
         // get passed parameter value, in this case, the record ID
         // isset() is a PHP function used to verify if a value is there or not
@@ -71,6 +84,8 @@
             $name = $row['name'];
             $description = $row['description'];
             $price = $row['price'];
+            $promotion_price = $row['promotion_price'];
+            $manufacture_date = $row['manufacture_date'];
             $image = $row['image'];
         }
 
@@ -80,6 +95,8 @@
         }
         ?>
 
+        <!-- HTML form to update record will be here -->
+        <!-- PHP post to update record will be here -->
         <?php
         // check if form was submitted
         if ($_POST) {
@@ -87,18 +104,31 @@
             $name = $_POST['name'];
             $description = $_POST['description'];
             $price = $_POST['price'];
+            $promotion_price = $_POST['promotion_price'];
+            $manufacture_date = $_POST['manufacture_date'];
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                 : htmlspecialchars($image, ENT_QUOTES);
+            $image = htmlspecialchars(strip_tags($image));
             $error_message = "";
 
             if ($price == "") {
                 $error_message .= "<div class='alert alert-danger'>Please make sure price are not empty</div>";
             } elseif (!is_numeric($price)) {
-                $error_message .= "<div class='alert alert-danger'>Please make sure price only have number</div>";
+                $error_message .= "<div class='alert alert-danger'>Please make sure price only numbers</div>";
+            } elseif ($price > 1000) {
+                $error_message .= "<div class='alert alert-danger'>Please make sure price are not more than RM1000</div>";
             }
-
-
+            if ($promotion_price == "") {
+                $promotion_price = NULL;
+            } elseif (!is_numeric($promotion_price)) {
+                $error_message .= "<div class='alert alert-danger'>Please make sure promotion price only have number</div>";
+            } elseif ($promotion_price >= $price) {
+                $error_message .= "<div class='alert alert-danger'>Please make sure promotion price is not more than normal price</div>";
+            }
+            if ($manufacture_date == "") {
+                $error_message .= "<div class='alert alert-danger'>Please make sure manufacture_date are not empty</div>";
+            }
             // now, if image is not empty, try to upload the image
             if ($_FILES["image"]["name"]) {
 
@@ -134,14 +164,34 @@
                 if (empty($error_message)) {
                     // it means there are no errors, so try to upload the file
                     if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                        $error_message .= "<div class='alert alert-danger>Unable to upload photo.</div>";
-                        $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
+                        echo "<div class='alert alert-danger>Unable to upload photo.</div>";
+                        echo "<div class='alert alert-danger>Update the record to upload photo.</div>";
                     }
                 }
+            } elseif (empty($image)) {
+                $image = "broken_image.jpg";
             }
 
-            if($image == null){
-                $image = "broken_image.jpg";
+            if (isset($_POST['delete'])) {
+                $image = htmlspecialchars(strip_tags($image));
+
+                $image = !empty($_FILES["image"]["name"])
+                    ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                    : "";
+                $target_directory = "uploads/product/";
+                $target_file = $target_directory . $image;
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+                unlink("uploads/product/" . $row['image']);
+                $_POST['image'] = null;
+                $query = "UPDATE products
+                            SET image=:image WHERE id = :id";
+                // prepare query for excecution
+                $stmt = $con->prepare($query);
+                $stmt->bindParam(':image', $image);
+                $stmt->bindParam(':id', $id);
+                // Execute the query
+                $stmt->execute();
             }
 
             if (!empty($error_message)) {
@@ -152,7 +202,7 @@
                     // write update query
                     // in this case, it seemed like we have so many fields to pass and
                     // it is better to label them and not use question marks
-                    $query = "UPDATE products SET name=:name, description=:description, price=:price, image=:image WHERE id = :id";
+                    $query = "UPDATE products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, manufacture_date=:manufacture_date, image=:image WHERE id = :id";
                     // prepare query for excecution
                     $stmt = $con->prepare($query);
                     // posted values
@@ -164,11 +214,13 @@
                     $stmt->bindParam(':name', $name);
                     $stmt->bindParam(':description', $description);
                     $stmt->bindParam(':price', $price);
+                    $stmt->bindParam(':promotion_price', $promotion_price);
+                    $stmt->bindParam(':manufacture_date', $manufacture_date);
                     $stmt->bindParam(':image', $image);
                     $stmt->bindParam(':id', $id);
                     // Execute the query
                     if ($stmt->execute()) {
-                        header("Location: product_read.php?update={$id}");
+                        echo "<div class='alert alert-success'>Record was updated.</div>";
                     } else {
                         echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
                     }
@@ -178,33 +230,7 @@
                     die('ERROR: ' . $exception->getMessage());
                 }
             }
-        }
-        ?>
-
-        <?php
-        if (isset($_POST['delete'])) {
-            $image = htmlspecialchars(strip_tags($image));
-
-            $image = !empty($_FILES["image"]["name"])
-                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                : "";
-            $target_directory = "uploads/product/";
-            $target_file = $target_directory . $image;
-            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-
-            unlink("uploads/product/" . $row['image']);
-            $_POST['image'] = null;
-            $query = "UPDATE products
-        SET image=:image WHERE id = :id";
-            // prepare query for excecution
-            $stmt = $con->prepare($query);
-            $stmt->bindParam(':image', $image);
-            $stmt->bindParam(':id', $id);
-            // Execute the query
-            $stmt->execute();
-        }
-
-        ?>
+        } ?>
 
 
 
@@ -224,6 +250,15 @@
                     <td><input type='text' name='price' value="<?php echo htmlspecialchars($price, ENT_QUOTES);  ?>" class='form-control' /></td>
                 </tr>
                 <tr>
+                    <td>Promotion Price</td>
+                    <td><input type='text' name='promotion_price' value="<?php echo htmlspecialchars($promotion_price, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Manufacture Date</td>
+                    <td><input type='date' name='manufacture_date' value="<?php echo htmlspecialchars($manufacture_date, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+
+                <tr>
                     <td>Images</td>
                     <td>
                         <div><img src="uploads/product/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
@@ -236,6 +271,7 @@
                     <td>
                         <input type='submit' value='Save Changes' class='btn btn-primary' />
                         <a href='product_read.php' class='btn btn-danger'>Back to read products</a>
+                        <?php echo "<a href='product_delete.php?id={$id}' onclick=delete_customers([$id});' class='btn btn-danger'>Delete product</a>"; ?>
                     </td>
                 </tr>
             </table>
