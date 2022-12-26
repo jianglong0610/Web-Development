@@ -20,7 +20,7 @@ try {
     $count = $stmt->rowCount();
 
     if($count > 0){
-        header('Location: product_read_one.php?action=nodelete');
+        header('Location: product_read.php?action=nodelete');
     }else{
         $query = "DELETE FROM products WHERE id = ?";
         $stmt = $con->prepare($query);

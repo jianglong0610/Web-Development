@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-    <a class="navbar-brand" href="home.php">Home</a>
+    <a class="navbar-brand" href="index.php">Home</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,7 +22,6 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="create_new_order.php">create order</a></li>
                     <li><a class="dropdown-item" href="order_list.php">order list</a></li>
-                    <li><a class="dropdown-item" href="order_details.php">order details</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">

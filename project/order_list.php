@@ -32,7 +32,7 @@ include 'check.php'
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT * , sum(price*quantity) AS total_price FROM order_details INNER JOIN order_summary ON order_summary.order_id = order_details.order_id INNER JOIN products ON products.id = order_details.product_id GROUP BY order_summary.order_id DESC";
+        $query = "SELECT * , sum(price*quantity) AS total_price FROM order_details INNER JOIN order_summary ON order_summary.order_id = order_details.order_id INNER JOIN products ON products.id = order_details.product_id INNER JOIN customers ON customers.Username = order_summary.customer_order GROUP BY order_summary.order_id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -50,7 +50,8 @@ include 'check.php'
             //creating our table heading
             echo "<tr>";
             echo "<th>ID</th>";
-            echo "<th>customer_order</th>";
+            echo "<th>First_name</th>";
+            echo "<th>Last_name</th>";
             echo "<th>total_price</th>";
             echo "<th>order_date</th>";
             echo "</tr>";
@@ -63,7 +64,8 @@ include 'check.php'
                 // creating new table row per record
                 echo "<tr>";
                 echo "<td>{$order_id}</td>";
-                echo "<td>{$customer_order}</td>";
+                echo "<td>{$First_name}</td>";
+                echo "<td>{$Last_name}</td>";
                 $total_price = htmlspecialchars(number_format($total_price, 2, '.', ''));
                 echo "<td>RM {$total_price}</td>";
                 echo "<td>{$order_date}</td>";

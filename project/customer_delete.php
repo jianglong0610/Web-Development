@@ -20,7 +20,7 @@ try {
     $count = $stmt->rowCount();
     
     if($count > 0){
-        header("Location: customer_read.php?action={nodelete}");
+        header("Location: customer_read.php?action=nodelete");
     }else{
         $query = "DELETE FROM customers WHERE id = ?";
         $stmt = $con->prepare($query);

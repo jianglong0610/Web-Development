@@ -37,6 +37,9 @@ include 'check.php'
         if ($action == 'deleted') {
             echo "<div class='alert alert-success'>Record was deleted.</div>";
         }
+        elseif ($action == 'nodelete') {
+            echo "<div class='alert alert-danger'>Customer have order so it can't be delete</div>";
+        }
 
         // select all data
         $query = "SELECT * FROM customers ORDER BY id DESC";
@@ -77,7 +80,7 @@ include 'check.php'
                 echo "<td class='col-1'>{$Gender}</td>";
                 echo "<td class='col-2'>{$Date_of_birth}</td>";
                 echo "<td class='col-1'>{$Account_status}</td>";
-                echo "<td class='col-3 text-center'><img src='uploads/customer/$image' class ='w-25'</td>";
+                echo "<td class='col-3 text-center'><img src='uploads/customer/$image' class ='w-50'</td>";
                 echo "<td class='3'>";
                 // read one record
                 echo "<a href='customer_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";

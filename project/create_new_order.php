@@ -41,14 +41,15 @@ include 'check.php'
                     echo "<div class='alert alert-danger'>Please choose your order.</div>";
                     $flag = false;
                 }
-                if ($product_id == 'Please select product') {
+                if ($product_id == ['Please select product']) {
                     echo "<div class='alert alert-danger'>Please choose your product.</div>";
                     $flag = false;
                 }
-                if ($quantity == 0) {
+                if ($quantity < [0]) {
                     echo "<div class='alert alert-danger'>The quantity cannot be 0</div>";
                     $flag = false;
                 }
+
 
                 if ($flag == true) {
 
@@ -78,7 +79,7 @@ include 'check.php'
 
                                 try {
                                     // insert query
-                                    $query = "INSERT INTO order_details SET order_id=:order_id , product_id=:product_id , quantity=:quantity ";
+                                    $query = "INSERT INTO order_details SET order_id=:order_id , product_id=:product_id , quantity=:quantity";
                                     // prepare query for execution
                                     $stmt = $con->prepare($query);
                                     // bind the parameters  
@@ -90,7 +91,7 @@ include 'check.php'
 
                                     // Execute the query
                                     if ($stmt->execute()) {
-                                        echo "<div class='alert alert-success'>Record was saved.</div>";
+                                        header("Location: order_list.php?update");
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }
@@ -173,7 +174,7 @@ include 'check.php'
 
 
                         <td>Quantity</td>
-                        <td><input type='number' name='quantity[]' value='$quantity'/
+                        <td><input type='number' name='quantity[]' value='$quantity'></td>
                         <td><input type="button" value="Delete" onclick="deleteRow(this)"></td>
                         </td>
 
@@ -212,13 +213,11 @@ include 'check.php'
                     newarray.push(selects[i].value);
                 }
                 if (newarray.length !== new Set(newarray).size) {
-                    alert("There are duplicate item in the array");
+                    alert("There are duplicate item in the product");
                     event.preventDefault();
                 }
             }
-        </script>
-
-        <script>
+       
             document.addEventListener('click', function(event) {
                 if (event.target.matches('.add_one')) {
                     var element = document.querySelector('.pRow');
@@ -226,14 +225,14 @@ include 'check.php'
                     element.after(clone);
                 }
             }, false);
-        </script>
-
-        <script>
+        
             function deleteRow(r) {
                 var total = document.querySelectorAll('.pRow').length;
                 if (total > 1) {
                     var i = r.parentNode.parentNode.rowIndex;
                     document.getElementById("delete_row").deleteRow(i);
+                } else {
+                    alert("You need at least one item");
                 }
             }
         </script>

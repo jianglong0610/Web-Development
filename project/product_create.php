@@ -160,7 +160,7 @@ include 'check.php'
                     $stmt->bindParam(':created', $created);
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo "<div class='alert alert-success'>Record was saved.</div>";
+                        header("Location: product_read.php?update");
                     } else {
                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                     }
