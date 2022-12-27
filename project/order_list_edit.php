@@ -59,10 +59,11 @@
             if ($product_id == ["Please select product"]) {
                 $errormsg .= "<div class='alert alert-danger'>You must to select product.</div>";
             }
-            if ($quantity == ["0"]) {
-                $errormsg .= "<div class='alert alert-danger'>You must to select quantity.</div>";
+            if ($quantity <= ["0"]) {
+                $errormsg .= "<div class='alert alert-danger'>You must choose 1 or more.</div>";
             }
             if (empty($errormsg)) {
+                
                 try {
                     // insert query
                     $query = "UPDATE order_summary SET customer_order=:customer_order, order_date=:order_date WHERE order_id=:order_id";
@@ -96,6 +97,7 @@
                                     // Execute the query
                                     $record_number = $count + 1;
                                     if ($stmt_insert->execute()) {
+                                        
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }
@@ -130,6 +132,8 @@
             die('ERROR: ' . $exception->getMessage());
         }
         ?>
+
+        
 
 
 

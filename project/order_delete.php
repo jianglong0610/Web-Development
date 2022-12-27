@@ -15,7 +15,7 @@ try {
     if($stmt->execute()){
         // redirect to read records page and
         // tell the user record was deleted
-        header('Location: order_read.php?action=deleted');
+        header('Location: order_list.php?action=deleted');
     }else{
         die('Unable to delete record.');
     }
