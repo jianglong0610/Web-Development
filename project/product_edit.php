@@ -86,6 +86,7 @@
             $price = $row['price'];
             $promotion_price = $row['promotion_price'];
             $manufacture_date = $row['manufacture_date'];
+            $expired_date = $row['expired_date'];
             $image = $row['image'];
         }
 
@@ -106,6 +107,10 @@
             $price = $_POST['price'];
             $promotion_price = $_POST['promotion_price'];
             $manufacture_date = $_POST['manufacture_date'];
+            $expired_date = $_POST['expired_date'];
+            $date1 = date_create($manufacture_date);
+            $date2 = date_create($expired_date);
+            $diff = date_diff($date1, $date2);
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                 : htmlspecialchars($image, ENT_QUOTES);
@@ -128,6 +133,12 @@
             }
             if ($manufacture_date == "") {
                 $error_message .= "<div class='alert alert-danger'>Please make sure manufacture_date are not empty</div>";
+            }
+            if ($expired_date == "") {
+                $expired_date = NULL;
+            }
+            if ($diff->format("%R%a") <= "0") {
+                $error_message .= "<div>Expired date must be after the manufacture date</div>";
             }
             // now, if image is not empty, try to upload the image
             if ($_FILES["image"]["name"]) {
@@ -202,7 +213,7 @@
                     // write update query
                     // in this case, it seemed like we have so many fields to pass and
                     // it is better to label them and not use question marks
-                    $query = "UPDATE products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, manufacture_date=:manufacture_date, image=:image WHERE id = :id";
+                    $query = "UPDATE products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, manufacture_date=:manufacture_date, expired_date=:expired_date, image=:image WHERE id = :id";
                     // prepare query for excecution
                     $stmt = $con->prepare($query);
                     // posted values
@@ -216,11 +227,12 @@
                     $stmt->bindParam(':price', $price);
                     $stmt->bindParam(':promotion_price', $promotion_price);
                     $stmt->bindParam(':manufacture_date', $manufacture_date);
+                    $stmt->bindParam(':expired_date', $expired_date);
                     $stmt->bindParam(':image', $image);
                     $stmt->bindParam(':id', $id);
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo "<div class='alert alert-success'>Record was updated.</div>";
+                        header("Location: product_read.php?update={$id}");
                     } else {
                         echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
                     }
@@ -254,11 +266,6 @@
                     <td><input type='text' name='promotion_price' value="<?php echo htmlspecialchars($promotion_price, ENT_QUOTES);  ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Manufacture Date</td>
-                    <td><input type='date' name='manufacture_date' value="<?php echo htmlspecialchars($manufacture_date, ENT_QUOTES);  ?>" class='form-control' /></td>
-                </tr>
-
-                <tr>
                     <td>Images</td>
                     <td>
                         <div><img src="uploads/product/<?php echo htmlspecialchars($image, ENT_QUOTES);  ?>" /></div>
@@ -266,6 +273,15 @@
                         <div><input type='submit' name='delete' value='Delete Image' class='btn btn-danger' /></div>
                     </td>
                 </tr>
+                <tr>
+                    <td>Manufacture Date</td>
+                    <td><input type='date' name='manufacture_date' value="<?php echo htmlspecialchars($manufacture_date, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Expired Date</td>
+                    <td><input type='date' name='expired_date' value="<?php echo htmlspecialchars($expired_date, ENT_QUOTES);  ?>" class='form-control' /></td>
+                </tr>
+
                 <tr>
                     <td></td>
                     <td>

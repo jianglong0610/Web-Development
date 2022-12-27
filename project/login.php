@@ -39,20 +39,20 @@ session_start();
 
             if (mysqli_num_rows($result) == 1) {
                 if ($row['Password'] != $Password) {
-                    echo "<div class='alert alert-danger'>Your password is incorrect.</div>";
+                    echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Your password is incorrect.</div>";
                 } elseif ($row['Account_status'] != "opened") {
-                    echo "<div class='alert alert-danger'>Your account is closed.</div>";
+                    echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Your account is closed.</div>";
                 } else {
                     header("Location: index.php");
                     $_SESSION["Pass"] = "Pass";
                 }
             } else {
-                echo "<div class='alert alert-danger'>Wrong user name.</div>";
+                echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Wrong user name.</div>";
             }
         };
 
         if ($_GET) {
-            echo "Please make sure you have access";
+            echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Please make sure you have access.</div>";
         }
 
 
