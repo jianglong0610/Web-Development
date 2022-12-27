@@ -172,7 +172,7 @@ include 'check.php'
                     $stmt->execute();
                     $count = $stmt->rowCount();
                     if ($count > 0) {
-                        echo "<h1 class=\"text-center\">TOP 3 No Purchase Products</h1>";
+                        echo "<h1 class=\"text-center\">TOP 3 No Popularity Products</h1>";
                         echo "<table class='table table-dark table-hover table-responsive table-bordered text-center'>";
                         echo "<tr class='table-light'>
                             <th>Product Name</th>";
