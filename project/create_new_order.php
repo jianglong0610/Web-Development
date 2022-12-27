@@ -45,7 +45,7 @@ include 'check.php'
                     echo "<div class='alert alert-danger'>Please choose your product.</div>";
                     $flag = false;
                 }
-                if ($quantity < [0]) {
+                if ($quantity <= ['0']) {
                     echo "<div class='alert alert-danger'>The quantity cannot be 0</div>";
                     $flag = false;
                 }
@@ -91,7 +91,7 @@ include 'check.php'
 
                                     // Execute the query
                                     if ($stmt->execute()) {
-                                        header("Location: order_list.php?update");
+                                        header("Location: order_list_read.php?update={$id}");
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }

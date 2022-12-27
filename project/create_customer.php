@@ -56,61 +56,56 @@
 
             $flag = 0;
             if ($Username == "") {
-                echo "Please enter your username";
+                echo "<div class='alert alert-danger'>Please enter your username</div>";
                 $flag = 1;
             }
             $space = " ";
             $word = $_POST['Username'];
             if (strpos($word, $space) !== false) {
-                echo "Username not cannot have space !";
+                echo "<div class='alert alert-danger'>Username not cannot have space !</div>";
                 $flag = 1;
             } elseif (strlen($Username) < 6) {
-                echo "Username need at least 6 characters !";
+                echo "<div class='alert alert-danger'>Username need at least 6 characters !</div>";
                 $flag = 1;
             }
 
             if ($Password == "") {
-                echo "Please enter your password !";
+                echo "<div class='alert alert-danger'>Please enter your password !</div>";
                 $flag = 1;
             } elseif (!preg_match('/[A-Z]/', $Password)) {
-                echo "Password must include uppercase !";
+                echo "<div class='alert alert-danger'>Password must include uppercase !</div>";
                 $flag = 1;
             } elseif (!preg_match('/[a-z]/', $Password)) {
-                echo "Password must include lowercase !";
+                echo "<div class='alert alert-danger'>Password must include lowercase !</div>";
                 $flag = 1;
             } elseif (!preg_match('/[0-9]/', $Password)) {
-                echo "Password must include number !";
+                echo "<div class='alert alert-danger'>Password must include number !</div>";
                 $flag = 1;
             } elseif (strlen($Password) < 8) {
-                echo "Password need at least 8 character !";
+                echo "<div class='alert alert-danger'>Password need at least 8 character !</div>";
                 $flag = 1;
             }
 
             if ($pass == "") {
-                echo "Please enter to comfirm password !";
+                echo "<div class='alert alert-danger'>Please enter to comfirm password !</div>";
                 $flag = 1;
             } elseif ($Password != $pass) {
-                echo "Password need to same with comfirm password !";
+                echo "<div class='alert alert-danger'>Password need to same with comfirm password !</div>";
                 $flag = 1;
             }
 
             if ($First_name == "") {
-                echo "Please enter your first name !";
+                echo "<div class='alert alert-danger'>Please enter your first name !</div>";
                 $flag = 1;
             }
 
             if ($Last_name == "") {
-                echo "Please enter your last name !";
-                $flag = 1;
-            }
-
-            if ($Gender == "") {
-                echo "Please select your gender !";
+                echo "<div class='alert alert-danger'>Please enter your last name !</div>";
                 $flag = 1;
             }
 
             if ($Date_of_birth == "") {
-                echo "Please select your date of birth !";
+                echo "<div class='alert alert-danger'>Please select your date of birth !</div>";
                 $flag = 1;
             }
             $day = $_POST['Date_of_birth'];
@@ -119,12 +114,7 @@
             $date2 = date_create($today);
             $diff = date_diff($date1, $date2);
             if ($diff->format("%y") <= "18") {
-                echo "User need 18 years old and above";
-                $flag = 1;
-            }
-
-            if ($Account_status == "") {
-                echo "Please enter your account status";
+                echo "<div class='alert alert-danger'>User need 18 years old and above</div>";
                 $flag = 1;
             }
 
