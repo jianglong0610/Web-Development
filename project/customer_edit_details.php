@@ -91,8 +91,8 @@
                 $result = $diff->format("%a");
                 $pass = true;
                 $passw = md5($_POST['passw']);
-                $new_pass = $_POST['new_pass'];
-                $comfirm_password = $_POST['comfirm_password'];
+                $new_pass = md5($_POST['new_pass']);
+                $comfirm_password = md5($_POST['comfirm_password']);
                 $select = "SELECT Password FROM customers WHERE id = :id ";
                 $stmt = $con->prepare($select);
 
@@ -119,27 +119,28 @@
                     $pass = false;
                 }
                 $keeppass = false;
-                if ($passw == "" && $new_pass == "" && $comfirm_password == "") {
-                    $keeppass = true;
+                if ($passw == md5("") && $new_pass == md5("") && $comfirm_password == md5("")) {
+                    $emptypass = true;
                 } else {
-                    if ($row['Password'] == $passw) {
-                        $lowercase = preg_match('@[a-z]@', $new_pass);
-                        $number    = preg_match('@[0-9]@', $new_pass);
-                        if (!$lowercase || !$number || strlen($new_pass) < 8) {
-                            echo "<div class='alert alert-danger'>Password should be at least 8 characters in length and should include one number.</div>";
-                            $pass = false;
+                    if ($row['password'] == $passw) {
+                        if (!preg_match('/[a-z]/', $new_pass)) {
+                            $error_message .= "<div class='alert alert-danger'>Password need include lowercase</div>";
+                        } elseif (!preg_match('/[0-9]/', $new_pass)) {
+                            $error_message .= "<div class='alert alert-danger'>Password need include number</div>";
+                        } elseif (strlen($new_pass) < 8) {
+                            $error_message .= "<div class='alert alert-danger'>Password need at least 8 charecter</div>";
                         }
                         if ($passw == $new_pass) {
-                            echo "<div class='alert alert-danger'>Old Password cannot same with New Password.</div>";
-                            $pass = false;
+                            $error_message .= "<div class='alert alert-danger'>New password cannot same with old password</div>";
                         }
-                        if ($new_pass != $comfirm_password) {
-                            echo "<div class='alert alert-danger'>New Password and Comfirm Password not same.</div>";
-                            $pass = false;
+                        if ($passw != md5("") && $password != md5("") && $comfirm_password == md5("")) {
+                            $error_message .= "<div class='alert alert-danger'>Please enter confirm password</div>";
+                        }
+                        if ($passw != md5("") && $password != md5("") && $comfirm_password != md5("") && $new_pass != $comfirm_password) {
+                            $error_message .= "<div class='alert alert-danger'>confirm password need to same with password</div>";
                         }
                     } else {
-                        echo "<div class='alert alert-danger'>Wrong Old Password</div>";
-                        $pass = false;
+                        $error_message .= "<div class='alert alert-danger'>Password incorrect</div>";
                     }
                 }
 
