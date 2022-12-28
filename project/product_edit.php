@@ -43,7 +43,7 @@
 
 <body>
     <!-- container -->
-    <div class="container">
+    <div class="container" style="background-image:url('image/background.jpg')">
 
         <?php
         include 'top_nav.php'
@@ -100,7 +100,7 @@
         <!-- PHP post to update record will be here -->
         <?php
         // check if form was submitted
-        if ($_POST) {
+        if (isset($_POST['update'])) {
 
             $name = $_POST['name'];
             $description = $_POST['description'];
@@ -183,27 +183,6 @@
                 $image = "broken_image.jpg";
             }
 
-            if (isset($_POST['delete'])) {
-                $image = htmlspecialchars(strip_tags($image));
-
-                $image = !empty($_FILES["image"]["name"])
-                    ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                    : "";
-                $target_directory = "uploads/product/";
-                $target_file = $target_directory . $image;
-                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-
-                unlink("uploads/product/" . $row['image']);
-                $_POST['image'] = null;
-                $query = "UPDATE products
-                            SET image=:image WHERE id = :id";
-                // prepare query for excecution
-                $stmt = $con->prepare($query);
-                $stmt->bindParam(':image', $image);
-                $stmt->bindParam(':id', $id);
-                // Execute the query
-                $stmt->execute();
-            }
 
             if (!empty($error_message)) {
                 echo "<div class='alert alert-danger'>{$error_message}</div>";
@@ -242,7 +221,31 @@
                     die('ERROR: ' . $exception->getMessage());
                 }
             }
-        } ?>
+        }
+        if (isset($_POST['delete'])) {
+            $image = htmlspecialchars(strip_tags($image));
+
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $target_directory = "uploads/product/";
+            $target_file = $target_directory . $image;
+            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+            unlink("uploads/product/" . $row['image']);
+            $_POST['image'] = null;
+            $query = "UPDATE products
+                        SET image=:image WHERE id = :id";
+            // prepare query for excecution
+            $stmt = $con->prepare($query);
+            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':id', $id);
+            // Execute the query
+            $stmt->execute();
+        }
+        ?>
+
+
 
 
 
@@ -285,7 +288,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <input type='submit' value='Save Changes' class='btn btn-primary' />
+                        <input type='submit' name="update" value='Save Changes' class='btn btn-primary' />
                         <a href='product_read.php' class='btn btn-danger'>Back to read products</a>
                         <?php echo "<a href='product_delete.php?id={$id}' onclick=delete_customers([$id});' class='btn btn-danger'>Delete product</a>"; ?>
                     </td>

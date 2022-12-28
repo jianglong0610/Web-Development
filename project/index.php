@@ -15,7 +15,7 @@ include 'check.php'
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="background-image:url('image/background.jpg')">
 
         <?php
         include 'top_nav.php'
@@ -25,7 +25,7 @@ include 'check.php'
             <h1>Home</h1>
         </div>
 
-        <div class="container-fluid row m-0 bg-danger d-flex justify-content-between align-items-center">
+        <div class="container-fluid row m-0 d-flex justify-content-between align-items-center">
             <div class="col-5">
                 <?php
                 include 'config/database.php';
@@ -75,7 +75,7 @@ include 'check.php'
                 // read current record's data
                 try {
                     // prepare select query
-                    $query = "SELECT * FROM order_summary WHERE order_id = ? ";
+                    $query = "SELECT * FROM order_summary INNER JOIN customers ON customers.Username = order_summary.customer_order WHERE order_id = ? ";
                     $stmt = $con->prepare($query);
 
                     // Bind the parameter
@@ -104,12 +104,14 @@ include 'check.php'
                     <tr class="table table-light">
                         <th>Order ID</th>
                         <th>Order Date</th>
-                        <th>Username</th>
+                        <th>First name</th>
+                        <th>Last name</th>
                     </tr>
                     <tr class='table-dark'>
                         <td><?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
-                        <td><?php echo htmlspecialchars($customer_order, ENT_QUOTES);  ?></td>
+                        <td><?php echo htmlspecialchars($First_name, ENT_QUOTES);  ?></td>
+                        <td><?php echo htmlspecialchars($Last_name, ENT_QUOTES);  ?></td>
                     </tr>
                 </table>
             </div>

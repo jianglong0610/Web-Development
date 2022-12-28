@@ -12,7 +12,7 @@ include 'check.php'
 
 <body>
     <!-- container -->
-    <div class="container">
+    <div class="container" style="background-image:url('image/background.jpg')">
 
         <?php
         include 'top_nav.php'
@@ -36,6 +36,9 @@ include 'check.php'
         // if it was redirected from delete.php
         if ($action == 'deleted') {
             echo "<div class='alert alert-success'>Record was deleted.</div>";
+        }
+        elseif ($action == 'nodelete') {
+            echo "<div class='alert alert-danger'>product have order so it can't be delete</div>";
         }
 
         // select all data

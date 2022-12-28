@@ -13,7 +13,7 @@ include 'check.php'
 <body>
 
     <!-- container -->
-    <div class="container">
+    <div class="container" style="background-image:url('image/background.jpg')">
         <?php
         include 'top_nav.php'
         ?>

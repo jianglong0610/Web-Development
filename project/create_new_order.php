@@ -21,7 +21,7 @@ include 'check.php'
         include 'top_nav.php'
         ?>
 
-        <div class="container">
+        <div class="container" style="background-image:url('image/background.jpg')">
 
             <div class="page-header d-flex justify-content-center my-3">
                 <h1>Create Order</h1>
@@ -34,7 +34,7 @@ include 'check.php'
             if ($_POST) {
                 $customer_order = $_POST['customer_order'];
                 $product_id = $_POST['product_id'];
-                $quantity = $_POST['quantity'];
+                $quantity = $_POST["quantity"];
                 $flag = true;
 
                 if ($customer_order == 'Select Customer Order') {
@@ -45,7 +45,7 @@ include 'check.php'
                     echo "<div class='alert alert-danger'>Please choose your product.</div>";
                     $flag = false;
                 }
-                if ($quantity <= ['0']) {
+                if ($quantity <= ["0"]) {
                     echo "<div class='alert alert-danger'>The quantity cannot be 0</div>";
                     $flag = false;
                 }
@@ -91,7 +91,7 @@ include 'check.php'
 
                                     // Execute the query
                                     if ($stmt->execute()) {
-                                        header("Location: order_list_read.php?update={$id}");
+                                        
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }
@@ -174,7 +174,7 @@ include 'check.php'
 
 
                         <td>Quantity</td>
-                        <td><input type='number' name='quantity[]' value='$quantity'></td>
+                        <td><input type='number' name="quantity[]" value='$quantity'></td>
                         <td><input type="button" value="Delete" onclick="deleteRow(this)"></td>
                         </td>
 

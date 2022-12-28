@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="background-image:url('image/background.jpg')">
         <?php
         include 'top_nav.php'
         ?>
@@ -74,7 +74,7 @@
         <!-- PHP post to update record will be here -->
         <?php
         // check if form was submitted
-        if ($_POST) {
+        if (isset($_POST['update'])) {
             try {
                 $Username = $_POST['Username'];
                 $First_name = $_POST['First_name'];
@@ -382,8 +382,8 @@
                 <tr>
                     <td></td>
                     <td>
-                        <input type='submit' value='Save Changes' class='btn btn-primary' />
-                        <a href='customers_read.php' class='btn btn-danger'>Back to read customers</a>
+                        <input type='submit' name="update" value='Save Changes' class='btn btn-primary' />
+                        <a href='customer_read.php' class='btn btn-danger'>Back to read customers</a>
                     </td>
                 </tr>
             </table>
