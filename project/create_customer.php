@@ -13,6 +13,7 @@ session_start();
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet">
 
     <script>
         $(function() {
@@ -26,7 +27,7 @@ session_start();
 
 <body>
     <!-- container -->
-    <div class="container" style="background-image:url('image/background.jpg')">
+    <div class="container font" style="background-image:url('image/background.jpg')">
 
         <?php
 
@@ -47,8 +48,8 @@ session_start();
         if ($_POST) {
             // include database connection
             $Username = $_POST['Username'];
-            $Password = $_POST['Password'];
-            $pass = $_POST['pass'];
+            $Password = md5($_POST['Password']);
+            $pass = md5($_POST['pass']);
             $First_name = $_POST['First_name'];
             $Last_name = $_POST['Last_name'];
             $Gender = $_POST['Gender'];
@@ -77,9 +78,6 @@ session_start();
 
             if ($Password == "") {
                 echo "<div class='alert alert-danger'>Please enter your password !</div>";
-                $flag = 1;
-            } elseif (!preg_match('/[A-Z]/', $Password)) {
-                echo "<div class='alert alert-danger'>Password must include uppercase !</div>";
                 $flag = 1;
             } elseif (!preg_match('/[a-z]/', $Password)) {
                 echo "<div class='alert alert-danger'>Password must include lowercase !</div>";

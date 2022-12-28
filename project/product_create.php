@@ -15,6 +15,7 @@ include 'check.php'
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="css/style.css" rel="stylesheet">
 
     <script>
         $(function() {
@@ -29,7 +30,7 @@ include 'check.php'
 <body>
 
     <!-- container -->
-    <div class="container" style="background-image:url('image/background.jpg')">
+    <div class="container font" style="background-image:url('image/background.jpg')">
 
         <?php
         include 'top_nav.php'

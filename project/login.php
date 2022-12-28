@@ -31,7 +31,7 @@ session_start();
         if (isset($_POST['Username']) && isset($_POST['Password'])) {
 
             $Username = ($_POST['Username']);
-            $Password = ($_POST['Password']);
+            $Password = md5($_POST['Password']);
 
             $select = "SELECT Username, Password, Account_status FROM customers WHERE Username = '$Username'";
             $result = mysqli_query($mysqli, $select);
