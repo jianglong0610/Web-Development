@@ -1,68 +1,75 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en" dir="ltr">
 
 <head>
-  <title>Contact</title>
 
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Send Email</title>
+  <title>Order</title>
+  <!-- Latest compiled and minified Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
 </head>
 
 <body>
-  <div class="container">
+  <?php
+  include 'top_nav.php'
+  ?>
+  <div class="container d-flex justify-content-center mt-5">
 
-    <?php
-    include 'top_nav.php'
-    ?>
 
-    <?php
-    $to = "chanjianglong0610@e.newera.edu.my";
-    $subject = "My subject";
-    $txt = "Hello world!";
-    $headers = "From: webmaster@example.com" . "\r\n" .
-      "CC: somebodyelse@example.com";
+    <form class="" action="contact.php" method="post">
+      <div>Email <br><input type="email" name="email" value=""></div> <br>
+      <div>Subject <br><input type="text" name="subject" value=""></div> <br>
+      <div>Message <br><input type="text" name="message" value=""></div> <br>
+      <button class="w-50 ms-5" type="submit" name="send">Send</button>
 
-    mail($to, $subject, $txt, $headers);
-    ?>
+      <?php
 
-    <div class="d-flex justify-content-center mt-5">
-      <h1>Contact Us</h1>
-    </div>
+      use PHPMailer\PHPMailer\PHPMailer;
+      use PHPMailer\PHPMailer\Exception;
 
-    <div class="row m-5">
-      <div class="col">
-        Email:<br>
-        chanjianglong@e.newera.edu.my
-      </div>
-      <div class="col">
-        Phone:<br>
-        012-6166199
-      </div>
-      <div class="col">
-        Instagram:<br>
-        ---
-      </div>
-    </div>
+      require 'phpmailer/src/Exception.php';
+      require 'phpmailer/src/PHPMailer.php';
+      require 'phpmailer/src/SMTP.php';
 
-    <div class="d-flex justify-content-center mt-5">
-      <h1>Suggestion</h1>
-    </div>
+      if (isset($_POST["send"])) {
+        $mail = new PHPMailer(true);
 
-    <form>
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name">
-      </div>
-      <div class="mb-3">
-        <label for="suggestion" class="form-label">Suggestion</label>
-        <textarea type="text" class="form-control" id="suggestion"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'ahbhx0610@gmail.com';
+        $mail->Password = 'mrjaxmcobczwhvcx';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = '465';
 
+        $mail->setFrom('ahbhx0610@gmail.com');
+
+        $mail->addAddress('ahbhx0610@gmail.com');
+
+        $mail->isHTML(true);
+
+        $mail->Subject = $_POST["subject"];
+        $mail->Body = $_POST["message"] . " " . $_POST['email'];
+
+        $mail->send();
+
+        echo
+        "
+    <script>
+    alert('Send Sucessfully');
+    document.location.herf = 'contact.php'
+    </script>
+    ";
+      }
+      ?>
   </div>
 </body>
 

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE HTML>
 <html>
 
@@ -9,7 +12,7 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <script>
         $(function() {
@@ -26,7 +29,10 @@
     <div class="container" style="background-image:url('image/background.jpg')">
 
         <?php
-        include 'top_nav.php'
+
+        if (isset($_SESSION["Pass"])) {
+            include 'top_nav.php';
+        }
         ?>
 
         <div class="page-header text-center">
@@ -50,7 +56,7 @@
             $Account_status = $_POST['Account_status'];
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-                :"";
+                : "";
             $image = htmlspecialchars(strip_tags($image));
             $error_message = "";
 
@@ -158,7 +164,7 @@
                 }
             }
 
-            if($image == null){
+            if ($image == null) {
                 $image = "profile.jpg";
             }
 
@@ -278,7 +284,6 @@
 
     </div>
     <!-- end .container -->
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>

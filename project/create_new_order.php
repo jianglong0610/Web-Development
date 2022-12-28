@@ -49,6 +49,10 @@ include 'check.php'
                     echo "<div class='alert alert-danger'>The quantity cannot be 0</div>";
                     $flag = false;
                 }
+                if ($quantity == [""]) {
+                    echo "<div class='alert alert-danger'>The quantity cannot blank</div>";
+                    $flag = false;
+                }
 
 
                 if ($flag == true) {
@@ -91,7 +95,7 @@ include 'check.php'
 
                                     // Execute the query
                                     if ($stmt->execute()) {
-                                        
+                                        header("Location: order_list.php?update={$order_id}");
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }
@@ -222,7 +226,8 @@ include 'check.php'
                 if (event.target.matches('.add_one')) {
                     var element = document.querySelector('.pRow');
                     var clone = element.cloneNode(true);
-                    element.after(clone);
+                    //element.after(clone);
+                    element.insertAdjacentHTML('afterend', clone.outerHTML);
                 }
             }, false);
         

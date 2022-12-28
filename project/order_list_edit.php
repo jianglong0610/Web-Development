@@ -77,7 +77,6 @@
 
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo "<div class='alert alert-success'>Your order is updated.</div>";
                         $query_delete = "DELETE FROM order_details WHERE order_id=:order_id";
                         $stmt_delete = $con->prepare($query_delete);
                         $stmt_delete->bindParam(':order_id', $id);
@@ -97,7 +96,7 @@
                                     // Execute the query
                                     $record_number = $count + 1;
                                     if ($stmt_insert->execute()) {
-                                        
+                                        header("Location: order_list.php?update={$id}");
                                     } else {
                                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                                     }

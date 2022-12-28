@@ -26,7 +26,7 @@ include 'check.php'
         </div>
 
         <div class="container-fluid row m-0 d-flex justify-content-between align-items-center">
-            <div class="col-5">
+            <div class="col-md-6">
                 <?php
                 include 'config/database.php';
 
@@ -61,7 +61,7 @@ include 'check.php'
                 ?>
             </div>
 
-            <div class="col-5">
+            <div class="col-md-6">
                 <?php
                 include 'config/database.php';
 
@@ -75,7 +75,7 @@ include 'check.php'
                 // read current record's data
                 try {
                     // prepare select query
-                    $query = "SELECT * FROM order_summary INNER JOIN customers ON customers.Username = order_summary.customer_order WHERE order_id = ? ";
+                    $query = "SELECT * ,sum(price*quantity) AS total_price FROM order_details INNER JOIN order_summary ON order_summary.order_id = order_details.order_id INNER JOIN products ON products.id = order_details.product_id INNER JOIN customers ON customers.Username = order_summary.customer_order WHERE order_summary.order_id = ?";
                     $stmt = $con->prepare($query);
 
                     // Bind the parameter
@@ -106,12 +106,17 @@ include 'check.php'
                         <th>Order Date</th>
                         <th>First name</th>
                         <th>Last name</th>
+                        <th>Price</th>
                     </tr>
                     <tr class='table-dark'>
                         <td><?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($First_name, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($Last_name, ENT_QUOTES);  ?></td>
+                        <td><?php $amount = htmlspecialchars(round($total_price), ENT_QUOTES);
+                                echo "RM $total_price";
+                                ?></td>
+                        
                     </tr>
                 </table>
             </div>
