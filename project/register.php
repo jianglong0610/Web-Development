@@ -1,5 +1,5 @@
 <?php
-include 'check.php'
+session_start();
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -30,7 +30,10 @@ include 'check.php'
     <div class="container font" style="background-image:url('image/background.jpg')">
 
         <?php
-        include 'top_nav.php'
+
+        if (isset($_SESSION["Pass"])) {
+            include 'top_nav.php';
+        }
         ?>
 
         <div class="page-header text-center">
@@ -186,10 +189,11 @@ include 'check.php'
                     $stmt->bindParam(':image', $image);
                     // Execute the query
                     if ($stmt->execute()) {
-                        header("Location: customer_read.php?update");
+                        header("Location: login.php?update={save}");
                     } else {
                         echo "<div class='alert alert-danger'>Unable to save record.</div>";
                     }
+                    
                 }
 
                 // show error

@@ -28,6 +28,10 @@ session_start();
         </div>
 
         <?php
+         if (isset($_GET['update'])) {
+            echo "<div class='alert alert-success w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Register was saved.</div>";
+        }
+
         include 'config/database.php';
 
         if (isset($_POST['Username']) && isset($_POST['Password'])) {
@@ -53,9 +57,6 @@ session_start();
             }
         };
 
-        if ($_GET) {
-            echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Please make sure you have access.</div>";
-        }
 
 
         ?>
@@ -77,7 +78,7 @@ session_start();
 
                 </table>
                 <div class="d-flex justify-content-center align-self-center">
-                    <a href="create_customer.php">Register now</a>
+                    <a href="register.php">Register now</a>
                 </div>
             </form>
 
