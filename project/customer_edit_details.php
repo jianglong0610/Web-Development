@@ -90,7 +90,7 @@
                 $diff = date_diff($date1, $date2);
                 $result = $diff->format("%a");
                 $pass = true;
-                $passw = $_POST['passw'];
+                $passw = md5($_POST['passw']);
                 $new_pass = $_POST['new_pass'];
                 $comfirm_password = $_POST['comfirm_password'];
                 $select = "SELECT Password FROM customers WHERE id = :id ";
@@ -123,11 +123,10 @@
                     $keeppass = true;
                 } else {
                     if ($row['Password'] == $passw) {
-                        $uppercase = preg_match('@[A-Z]@', $new_pass);
                         $lowercase = preg_match('@[a-z]@', $new_pass);
                         $number    = preg_match('@[0-9]@', $new_pass);
-                        if (!$uppercase || !$lowercase || !$number || strlen($new_pass) < 8) {
-                            echo "<div class='alert alert-danger'>Password should be at least 8 characters in length and should include at least one upper case letter, one number.</div>";
+                        if (!$lowercase || !$number || strlen($new_pass) < 8) {
+                            echo "<div class='alert alert-danger'>Password should be at least 8 characters in length and should include one number.</div>";
                             $pass = false;
                         }
                         if ($passw == $new_pass) {
@@ -212,7 +211,7 @@
                     if ($keeppass == true) {
                         $new_pass = $row['Password'];
                     } else {
-                        $new_pass = htmlspecialchars(strip_tags($_POST['new_pass']));
+                        $new_pass = htmlspecialchars(strip_tags(md5($_POST['new_pass'])));
                     }
                     $first_name = htmlspecialchars(strip_tags($_POST['First_name']));
                     $last_name = htmlspecialchars(strip_tags($_POST['Last_name']));
@@ -279,15 +278,15 @@
                 </tr>
                 <tr>
                     <td>Old Password</td>
-                    <td><input type='text' name='passw' class='form-control' /></td>
+                    <td><input type='password' name='passw' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>New Password</td>
-                    <td><input type='text' name='new_pass' class='form-control' /></td>
+                    <td><input type='password' name='new_pass' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Comfirm Password</td>
-                    <td><input type='text' name='comfirm_password' class='form-control' /></td>
+                    <td><input type='password' name='comfirm_password' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>First Name</td>

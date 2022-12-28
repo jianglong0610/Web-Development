@@ -21,7 +21,7 @@ session_start();
 
 <body>
 
-    <div class="container-fluid box" style="background-image:url('image/lightblue_bg.jpg">
+    <div class="container-fluid box" style="background-image:url('image/lightblue_bg.jpg')">
 
         <div class="page-header d-flex justify-content-center">
             <h1 class="mt-5">Login Page</h1>
