@@ -14,15 +14,17 @@ session_start();
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="css/login.css" rel="stylesheet">
+
 
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="container-fluid box" style="background-image:url('image/lightblue_bg.jpg">
 
-        <div class="page-header d-flex justify-content-center my-3">
-            <h1>Login Page</h1>
+        <div class="page-header d-flex justify-content-center">
+            <h1 class="mt-5">Login Page</h1>
         </div>
 
         <?php
@@ -70,11 +72,13 @@ session_start();
                         <label for="floatingPassword">Password</label>
                     </div>
 
-                
-                    <button class="w-50 btn btn-lg btn-primary" type="submit">Login</button>
+
+                    <button class="w-50 btn btn-lg btn-primary mt-3 d-flex justify-content-center align-self-center ms-auto me-auto" type="submit">Login</button>
 
                 </table>
-                <a href="create_customer.php">Register now</a>
+                <div class="d-flex justify-content-center align-self-center">
+                    <a href="create_customer.php">Register now</a>
+                </div>
             </form>
 
         </div>
