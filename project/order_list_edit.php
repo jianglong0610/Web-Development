@@ -63,7 +63,7 @@
                 $errormsg .= "<div class='alert alert-danger'>You must choose 1 or more.</div>";
             }
             if (empty($errormsg)) {
-                
+
                 try {
                     // insert query
                     $query = "UPDATE order_summary SET customer_order=:customer_order, order_date=:order_date WHERE order_id=:order_id";
@@ -132,7 +132,7 @@
         }
         ?>
 
-        
+
 
 
 
@@ -242,9 +242,19 @@
     <script>
         document.addEventListener('click', function(event) {
             if (event.target.matches('.add_one')) {
-                var element = document.querySelector('.pRow');
-                var clone = element.cloneNode(true);
-                element.after(clone);
+                var rows = document.getElementsByClassName('pRow');
+                // Get the last row in the table
+                var lastRow = rows[rows.length - 1];
+                // Clone the last row
+                var clone = lastRow.cloneNode(true);
+                // Insert the clone after the last row
+                lastRow.insertAdjacentElement('afterend', clone);
+
+                // Loop through the rows
+                for (var i = 0; i < rows.length; i++) {
+                    // Set the inner HTML of the first cell to the current loop iteration number
+                    rows[i].cells[0].innerHTML = i + 1;
+                }
             }
         }, false);
 
