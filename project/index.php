@@ -109,14 +109,17 @@ include 'check.php'
                         <th>Price</th>
                     </tr>
                     <tr class='table-dark'>
-                        <td><?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?></td>
+                        <td>
+                            <a href="order_list_read.php?id=<?php echo urlencode($order_id); ?>">
+                                <?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?>
+                        </td>
                         <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($First_name, ENT_QUOTES);  ?></td>
                         <td><?php echo htmlspecialchars($Last_name, ENT_QUOTES);  ?></td>
                         <td><?php $amount = htmlspecialchars(round($total_price), ENT_QUOTES);
-                                echo "RM $total_price";
-                                ?></td>
-                        
+                            echo "RM $total_price";
+                            ?></td>
+
                     </tr>
                 </table>
             </div>
@@ -140,7 +143,10 @@ include 'check.php'
                             <th>Highest Amount</th>
                         </tr>
                         <tr class='table-dark'>
-                            <td><?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?></td>
+                            <td>
+                                <a href="order_list_read.php?id=<?php echo urlencode($order_id); ?>">
+                                    <?php echo htmlspecialchars($order_id, ENT_QUOTES);  ?>
+                            </td>
                             <td><?php echo htmlspecialchars($order_date, ENT_QUOTES);  ?></td>
                             <td><?php echo htmlspecialchars($customer_order, ENT_QUOTES);  ?></td>
                             <td><?php $amount = htmlspecialchars(round($HIGHEST), ENT_QUOTES);
@@ -152,18 +158,21 @@ include 'check.php'
 
                 <div class="my-3">
                     <?php
-                    $query = "SELECT name, sum(quantity) AS popular FROM products INNER JOIN order_details ON order_details.product_id = products.id group by name order by sum(quantity) desc limit 5;";
+                    $query = "SELECT *, sum(quantity) AS popular FROM products INNER JOIN order_details ON order_details.product_id = products.id group by name order by sum(quantity) desc limit 5;";
                     $stmt = $con->prepare($query);
                     $stmt->execute();
                     $count = $stmt->rowCount();
                     if ($count > 0) {
                         echo "<h1 class=\"text-center\">Top 5 Selling Product</h1>";
                         echo "<table class='table table-dark table-hover table-responsive table-bordered text-center'>";
-                        echo "<tr class='table-light'><th>Product Name</th>
+                        echo "<tr class='table-light'><th>ID</th><th>Product Name</th>
                  <th>Quantity</th></tr>";
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             extract($row);
                             echo "<tr class='table-dark'>";
+                            echo "<td>";
+                            echo "<a href='product_read_one.php?id=" . urlencode($id) . "'>{$id}</a>";
+                            echo "</td>";
                             echo "<td>{$name}</td>";
                             echo "<td>{$popular}</td>";
                             echo "</tr>";
