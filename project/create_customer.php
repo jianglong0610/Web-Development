@@ -49,65 +49,64 @@ include 'check.php'
             $pass = md5($_POST['pass']);
             $First_name = $_POST['First_name'];
             $Last_name = $_POST['Last_name'];
-            $Gender = $_POST['Gender'];
+            $Gender = !empty($_POST['Gender']) ? $_POST['Gender']: "";
             $Date_of_birth = $_POST['Date_of_birth'];
-            $Account_status = $_POST['Account_status'];
+            $Account_status = !empty($_POST['Gender']) ? $_POST['Gender']: "";
             $image = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                 : "";
             $image = htmlspecialchars(strip_tags($image));
             $error_message = "";
 
-            $flag = 0;
             if ($Username == "") {
-                echo "<div class='alert alert-danger'>Please enter your username</div>";
-                $flag = 1;
+                $error_message .= "<div>Please enter your username</div>";
             }
+
+            if(empty($Gender)){
+                $error_message .= "<div>Please select your gender</div>";
+            }
+
             $space = " ";
             $word = $_POST['Username'];
             if (strpos($word, $space) !== false) {
-                echo "<div class='alert alert-danger'>Username not cannot have space !</div>";
-                $flag = 1;
+                $error_message .= "<div>Username not cannot have space !</div>";
             } elseif (strlen($Username) < 6) {
-                echo "<div class='alert alert-danger'>Username need at least 6 characters !</div>";
-                $flag = 1;
+                 $error_message .= "<div>Username need at least 6 characters !</div>";
             }
 
             if ($Password == "") {
-                echo "<div class='alert alert-danger'>Please enter your password !</div>";
-                $flag = 1;
+                $error_message .= "<div>Please enter your password !</div>";
             } elseif (!preg_match('/[a-z]/', $Password)) {
-                echo "<div class='alert alert-danger'>Password must include lowercase !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Password must include lowercase !</div>";
+                
             } elseif (!preg_match('/[0-9]/', $Password)) {
-                echo "<div class='alert alert-danger'>Password must include number !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Password must include number !</div>";
+                
             } elseif (strlen($Password) < 8) {
-                echo "<div class='alert alert-danger'>Password need at least 8 character !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Password need at least 8 character !</div>";
             }
 
             if ($pass == "") {
-                echo "<div class='alert alert-danger'>Please enter to comfirm password !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Please enter to comfirm password !</div>";
+            
             } elseif ($Password != $pass) {
-                echo "<div class='alert alert-danger'>Password need to same with comfirm password !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Password need to same with comfirm password !</div>";
+                
             }
 
             if ($First_name == "") {
-                echo "<div class='alert alert-danger'>Please enter your first name !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Please enter your first name !</div>";
+                
             }
 
             if ($Last_name == "") {
-                echo "<div class='alert alert-danger'>Please enter your last name !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Please enter your last name !</div>";
+            
             }
 
             if ($Date_of_birth == "") {
-                echo "<div class='alert alert-danger'>Please select your date of birth !</div>";
-                $flag = 1;
+                $error_message .=  "<div>Please select your date of birth !</div>";
+    
             }
             $day = $_POST['Date_of_birth'];
             $today = date("Ymd");
@@ -115,8 +114,8 @@ include 'check.php'
             $date2 = date_create($today);
             $diff = date_diff($date1, $date2);
             if ($diff->format("%y") <= "18") {
-                echo "<div class='alert alert-danger'>User need 18 years old and above</div>";
-                $flag = 1;
+                $error_message .=  "<div>User need 18 years old and above</div>";
+                
             }
 
             if ($_FILES["image"]["name"]) {
@@ -129,20 +128,20 @@ include 'check.php'
                 // make sure that file is a real image
                 $check = getimagesize($_FILES["image"]["tmp_name"]);
                 if ($check === false) {
-                    $error_message .= "<div class='alert alert-danger'>Submitted file is not an image.</div>";
+                    $error_message .= "<div>Submitted file is not an image.</div>";
                 }
                 // make sure certain file types are allowed
                 $allowed_file_types = array("jpg", "jpeg", "png", "gif");
                 if (!in_array($file_type, $allowed_file_types)) {
-                    $error_message .= "<div class='alert alert-danger'>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                    $error_message .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
                 }
                 // make sure file does not exist
                 if (file_exists($target_file)) {
-                    $error_message .= "<div class='alert alert-danger'>Image already exists. Try to change file name.</div>";
+                    $error_message .= "<div>Image already exists. Try to change file name.</div>";
                 }
                 // make sure submitted file is not too large, can't be larger than 1 MB
                 if ($_FILES['image']['size'] > (1024000)) {
-                    $error_message .= "<div class='alert alert-danger'>Image must be less than 1 MB in size.</div>";
+                    $error_message .= "<div>Image must be less than 1 MB in size.</div>";
                 }
                 // make sure the 'uploads' folder exists
                 // if not, create it
@@ -153,8 +152,8 @@ include 'check.php'
                 if (empty($error_message)) {
                     // it means there are no errors, so try to upload the file
                     if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                        $error_message .= "<div class='alert alert-danger>Unable to upload photo.</div>";
-                        $error_message .= "<div class='alert alert-danger>Update the record to upload photo.</div>";
+                        $error_message .= "<div>Unable to upload photo.</div>";
+                        $error_message .= "<div>Update the record to upload photo.</div>";
                     }
                 }
             }
@@ -167,7 +166,7 @@ include 'check.php'
                 echo "<div class='alert alert-danger'>{$error_message}</div>";
             }
 
-            if ($flag == 0) {
+            else{
 
                 include 'config/database.php';
                 try {
