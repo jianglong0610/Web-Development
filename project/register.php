@@ -232,7 +232,7 @@ session_start();
                     <td>Gender</td>
                     <td>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" value="female" name="Gender" checked>
+                            <input class="form-check-input" type="radio" value="female" name="Gender">
                             <label class="form-check-label" for="flexRadioDefault1">
                                 Female
                             </label>
