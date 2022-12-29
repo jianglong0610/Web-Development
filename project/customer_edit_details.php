@@ -253,17 +253,20 @@
             $target_directory = "uploads/customer/";
             $target_file = $target_directory . $image;
             $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-
-            unlink("uploads/customer/" . $row['image']);
-            $_POST['image'] = null;
-            $query = "UPDATE customers
+            if ($row['image'] == 'profile.jpg') {
+                echo "<div class='alert alert-danger'>This customer dont have an image so cant be deleted</div>";
+            } else {
+                unlink("uploads/customer/" . $row['image']);
+                $_POST['image'] = null;
+                $query = "UPDATE customers
         SET image=:image WHERE id = :id";
-            // prepare query for excecution
-            $stmt = $con->prepare($query);
-            $stmt->bindParam(':image', $image);
-            $stmt->bindParam(':id', $id);
-            // Execute the query
-            $stmt->execute();
+                // prepare query for excecution
+                $stmt = $con->prepare($query);
+                $stmt->bindParam(':image', $image);
+                $stmt->bindParam(':id', $id);
+                // Execute the query
+                $stmt->execute();
+            }
         }
 
         ?>

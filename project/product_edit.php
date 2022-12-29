@@ -231,17 +231,20 @@
             $target_directory = "uploads/product/";
             $target_file = $target_directory . $image;
             $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-
-            unlink("uploads/product/" . $row['image']);
-            $_POST['image'] = null;
-            $query = "UPDATE products
+            if ($row['image'] == 'broken_image.jpg') {
+                echo "<div class='alert alert-danger'>This product dont have an image so cant be deleted</div>";
+            } else {
+                unlink("uploads/product/" . $row['image']);
+                $_POST['image'] = null;
+                $query = "UPDATE products
                         SET image=:image WHERE id = :id";
-            // prepare query for excecution
-            $stmt = $con->prepare($query);
-            $stmt->bindParam(':image', $image);
-            $stmt->bindParam(':id', $id);
-            // Execute the query
-            $stmt->execute();
+                // prepare query for excecution
+                $stmt = $con->prepare($query);
+                $stmt->bindParam(':image', $image);
+                $stmt->bindParam(':id', $id);
+                // Execute the query
+                $stmt->execute();
+            }
         }
         ?>
 
