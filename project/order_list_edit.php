@@ -56,18 +56,12 @@
             if ($customer_order == "Select Customer") {
                 $errormsg .= "<div class='alert alert-danger'>You must to select customer.</div>";
             }
-            if ($customer_order == 'Select Customer Order') {
-                echo "<div class='alert alert-danger'>Please choose your order.</div>";
-                $flag = false;
-            }
             for ($i = 0; $i < count($product_id); $i++) {
                 if (empty($product_id[$i]) || $product_id[$i] == 'Please select product') {
-                    echo "<div class='alert alert-danger'>Please choose a product for $i.</div>";
-                    $flag = false;
+                    $errormsg .= "<div class='alert alert-danger'>Please choose a product for $i.</div>";
                 }
                 if (empty($quantity[$i]) || $quantity[$i] <= 0) {
-                    echo "<div class='alert alert-danger'>Please enter a valid quantity for $i.</div>";
-                    $flag = false;
+                    $errormsg .= "<div class='alert alert-danger'>Please enter a valid quantity for $i.</div>";
                 }
             }
 
