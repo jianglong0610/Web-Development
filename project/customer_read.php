@@ -36,8 +36,7 @@ include 'check.php'
         // if it was redirected from delete.php
         if ($action == 'deleted') {
             echo "<div class='alert alert-success'>Record was deleted.</div>";
-        }
-        elseif ($action == 'nodelete') {
+        } elseif ($action == 'nodelete') {
             echo "<div class='alert alert-danger'>Customer have order so it can't be delete</div>";
         }
 
@@ -89,7 +88,11 @@ include 'check.php'
                 echo "<a href='customer_edit_details.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>";
 
                 // we will use this links on next part of this post
-                echo "<a href='#' onclick='delete_customers({$id});'  class='btn btn-danger'>Delete</a>";
+                if (isset($_SESSION["user"])) {
+                    echo "";
+                } else {
+                    echo "<a href='#' onclick='customers_delete({$id});'  class='mx-2 btn btn-danger'>Delete</a>";
+                }
                 echo "</td>";
                 echo "</tr>";
             }

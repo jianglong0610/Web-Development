@@ -1,6 +1,8 @@
 <?php
 session_start();
 ?>
+
+
 <!DOCTYPE HTML>
 <html>
 
@@ -28,7 +30,7 @@ session_start();
         </div>
 
         <?php
-         if (isset($_GET['update'])) {
+        if (isset($_GET['update'])) {
             echo "<div class='alert alert-success w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Register was saved.</div>";
         }
 
@@ -51,6 +53,10 @@ session_start();
                 } else {
                     header("Location: index.php");
                     $_SESSION["Pass"] = "Pass";
+                    $_SESSION["Username"] = "$Username";
+                    if ($_SESSION["Username"] != "admin666") {
+                        $_SESSION["user"] = "user";
+                    }
                 }
             } else {
                 echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Wrong user name.</div>";
