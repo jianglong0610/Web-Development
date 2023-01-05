@@ -51,12 +51,12 @@ session_start();
                 } elseif ($row['Account_status'] != "opened") {
                     echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Your account is closed.</div>";
                 } else {
-                    header("Location: index.php");
                     $_SESSION["Pass"] = "Pass";
                     $_SESSION["Username"] = "$Username";
                     if ($_SESSION["Username"] != "admin666") {
                         $_SESSION["user"] = "user";
                     }
+                    header("Location: index.php");
                 }
             } else {
                 echo "<div class='alert alert-danger w-25 d-flex justify-content-center align-self-center ms-auto me-auto'>Wrong user name.</div>";
